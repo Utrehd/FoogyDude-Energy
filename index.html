@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UTREHD Energy</title>
+<meta name="description" content="A home-mixed energy and vitamin drink. Every dose on the label, checked against EU daily limits.">
+<meta property="og:title" content="UTREHD Energy">
+<meta property="og:description" content="Min-maxed. Every dose on the label.">
+<meta property="og:image" content="https://utrehd.github.io/FoogyDude-Energy/utrehd-energy.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #EEF1F5;
+  --ink: #14213A;
+  --muted: #5B6B82;
+  --track: #CBD3DE;
+  --pulse: #E8174F;
+  --warn: #B4400C;
+  --beat: 2.4s;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1A2E;
+    --ink: #E9EEF6;
+    --muted: #8C9AB0;
+    --track: #24324A;
+    --pulse: #FF3D6E;
+    --warn: #FB923C;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1A2E; --ink: #E9EEF6; --muted: #8C9AB0; --track: #24324A;
+  --pulse: #FF3D6E; --warn: #FB923C; color-scheme: dark;
+}
+body[data-mode="hardcore"] { --pulse: #F0441B; --beat: 1s; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body[data-mode="hardcore"] { --pulse: #FF5A2A; }
+}
+
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 1.0625rem/1.55 "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color .3s;
+}
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
+.display { font-family: "Big Shoulders Display", "Anton", "Bebas Neue", "Oswald", Impact, "Arial Narrow", sans-serif; font-weight: 900; line-height: .86; letter-spacing: .01em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--pulse); outline-offset: 4px; }
+
+/* Hero */
+.hero { padding: clamp(2.5rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem); }
+.mark { position: relative; }
+.mark h1 { margin: 0; font-size: clamp(5.2rem, 28vw, 19rem); line-height: .9; }
+.mark h1 span { display: block; }
+.mark h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.pulse { position: absolute; left: -6vw; top: 50%; transform: translateY(-50%); width: calc(100% + 12vw); height: auto; overflow: visible; pointer-events: none; }
+.pulse path { fill: none; stroke: var(--pulse); stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; transition: stroke .4s; }
+.pulse .base { opacity: .22; }
+.pulse .beat { stroke-dasharray: 140 1200; stroke-dashoffset: 140; animation: travel var(--beat) linear infinite; filter: drop-shadow(0 0 6px var(--pulse)); }
+@keyframes travel { to { stroke-dashoffset: -1000; } }
+.lede { margin-top: clamp(1.5rem, 4vh, 2.5rem); max-width: 34rem; font-size: clamp(1.15rem, 2.2vw, 1.4rem); line-height: 1.45; }
+
+/* Mode switch */
+.modes { display: flex; gap: clamp(1.5rem, 4vw, 3rem); margin-top: clamp(2rem, 5vh, 3rem); flex-wrap: wrap; }
+.mode {
+  appearance: none; background: none; border: 0; padding: 0 0 .35rem; cursor: pointer;
+  color: var(--muted); font: inherit; text-align: left;
+  border-bottom: 3px solid transparent; transition: color .2s, border-color .2s;
+}
+.mode strong { display: block; font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 900; font-size: clamp(1.9rem, 4.5vw, 2.6rem); line-height: 1; color: inherit; }
+.mode small { font-size: .95rem; }
+.mode[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--pulse); }
+.mode:hover { color: var(--ink); }
+
+/* Recipe */
+section { padding: clamp(2.5rem, 7vh, 4.5rem) 0; }
+h2 { margin: 0 0 1.75rem; font-size: clamp(2.6rem, 7vw, 4.2rem); }
+.recipe { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
+.recipe li { display: grid; grid-template-columns: minmax(6.5rem, 9rem) 1fr; align-items: baseline; gap: 1rem; }
+.recipe .qty { font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1; color: var(--pulse); transition: color .4s; }
+.recipe .what { font-size: 1.05rem; }
+.recipe .what span { color: var(--muted); }
+.summary { margin-top: 2rem; max-width: 40rem; font-size: 1.15rem; }
+.summary b { font-weight: 600; }
+.howto { margin-top: .75rem; max-width: 40rem; color: var(--muted); }
+
+/* Ingredients */
+.hint { color: var(--muted); margin: -1rem 0 2.5rem; }
+.group { margin-top: 3rem; }
+.group h3 { margin: 0 0 1rem; font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 700; font-size: 1.9rem; line-height: 1; color: var(--muted); }
+details.ing { padding: .9rem 0; }
+details.ing summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr auto; column-gap: 1rem; row-gap: .45rem; align-items: baseline; }
+details.ing summary::-webkit-details-marker { display: none; }
+.ing-name { font-weight: 600; font-size: 1.1rem; }
+.ing-name::after { content: "+"; display: inline-block; margin-left: .5rem; color: var(--muted); font-weight: 400; transition: transform .2s; }
+details[open] .ing-name::after { transform: rotate(45deg); }
+.ing-amt { font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 700; font-size: 1.6rem; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
+.bar { grid-column: 1 / -1; position: relative; height: 3px; margin: .35rem 0 .1rem; background: var(--track); border-radius: 2px; }
+.bar.open { background: linear-gradient(to right, var(--track) 55%, transparent); }
+.bar i { display: block; height: 100%; width: 0; background: var(--pulse); border-radius: 2px; transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
+.bar .tick { position: absolute; top: -6px; width: 2px; height: 15px; margin-left: -1px; background: var(--ink); border-radius: 1px; transition: left .6s cubic-bezier(.2,.8,.2,1); }
+.ing-max { grid-column: 1 / -1; font-size: .9rem; color: var(--muted); }
+.ing-max.flag { color: var(--warn); }
+.effects { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 2rem; padding: .9rem 0 .4rem; max-width: 52rem; }
+.effects p { font-size: .98rem; }
+.effects b { display: block; font-weight: 600; font-size: .85rem; color: var(--muted); margin-bottom: .15rem; }
+@media (max-width: 560px) {
+  .effects { grid-template-columns: 1fr; }
+  .recipe li { grid-template-columns: 5.5rem 1fr; }
+}
+
+footer { padding: 3rem 0 4rem; color: var(--muted); font-size: .9rem; max-width: 46rem; }
+footer p + p { margin-top: .6rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse .beat { animation: none; stroke-dasharray: none; }
+  .bar i, .bar .tick, body { transition: none; }
+}
+</style>
+</head>
+<body data-mode="everyday">
+<main class="wrap">
+
+  <header class="hero">
+    <div class="mark">
+      <h1 class="display" aria-label="UTREHD Energy"><span>UTREHD</span><span class="outline">ENERGY</span></h1>
+      <svg class="pulse" viewBox="0 0 1200 200" aria-hidden="true">
+        <path class="base" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
+        <path class="beat" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
+      </svg>
+    </div>
+    <p class="lede">Caffeine, creatine, 12 vitamins, 9 minerals and a focus stack in one bottle. Every dose checked against the daily max.</p>
+
+    <div class="modes" role="group" aria-label="Choose a version">
+      <button class="mode" type="button" data-mode="everyday" aria-pressed="true"><strong>Everyday</strong><small>Steady energy for a normal day</small></button>
+      <button class="mode" type="button" data-mode="hardcore" aria-pressed="false"><strong>Hardcore session</strong><small>Full focus stack for long, demanding work</small></button>
+    </div>
+  </header>
+
+  <section aria-labelledby="bottle-h">
+    <h2 id="bottle-h" class="display">In the bottle</h2>
+    <ul class="recipe" id="recipe"></ul>
+    <p class="summary" id="summary"></p>
+    <p class="howto">Drop the tablet in first and wait until it stops fizzing before you close the cap. Then add the powders and sip over one to two hours.</p>
+  </section>
+
+  <section aria-labelledby="ing-h">
+    <h2 id="ing-h" class="display">Everything in it</h2>
+    <p class="hint">Red is one bottle. The short mark is the daily need, or the dose studies used. A solid line ends at the daily max; a fading line means no max is set. Tap an ingredient for what it does.</p>
+    <div id="ingredients"></div>
+  </section>
+
+  <footer>
+    <p>Daily need is the EU reference value used on food labels. Max values are EU (EFSA) upper limits for healthy adults, or the highest intake studies found safe where no EU limit exists. Most limits count food too, not just this bottle.</p>
+    <p>Not for under-18s, pregnancy or breastfeeding. One bottle a day at most, and no other caffeine on top of it. This is a home-mixed drink, not medical advice.</p>
+  </footer>
+</main>
+
+<script>
+(function () {
+  // Products and how much of each goes in, per mode (1 = one full label serving)
+  const MODES = {
+    everyday: { xb: 1, sp: 1/3, tet: 1, cr: 1, cost: "CHF 2.70" },
+    hardcore: { xb: 1, sp: 1,   tet: 1, cr: 1, cost: "CHF 5.30" }
+  };
+
+  const RECIPE = [
+    { key: "xb",  qty: m => "9 g",  what: "GymBeam XBEAM Energy Powder", note: "1 scoop" },
+    { key: "sp",  qty: m => m.sp === 1 ? "15 g" : "5 g", what: "Sponser Mental Focus", note: m => m.sp === 1 ? "3 heaped scoops" : "1 heaped scoop" },
+    { key: "tet", qty: m => "1",    what: "tetesept A-Z Complex", note: "fizzy tablet" },
+    { key: "cr",  qty: m => "3 g",  what: "QNT Creatine Monohydrate", note: "1 scoop" },
+    { key: "mt",  qty: m => "1",    what: "Mate tea bag", note: "brewed in the bottle" },
+    { key: "w",   qty: m => "1 L",  what: "Water", note: "" }
+  ];
+
+  const VIT_SHORT = "Nothing you’ll feel unless you’re low.";
+
+  // src: amount per full serving of each product. max: daily max in the same unit.
+  const GROUPS = [
+    { title: "Stimulant", items: [
+      { name: "Caffeine", unit: "mg", caffeine: true, max: 400,
+        short: "More alert and focused within 30–60 minutes, lasting a few hours. Keep it under 200 mg at once.",
+        long: "Tolerance builds with daily use. Too much or too late hurts sleep." }
+    ]},
+    { title: "Performance", items: [
+      { name: "Creatine monohydrate", unit: "g", src: { cr: 3 }, max: 3, maxText: "Matches the 3 g daily dose EFSA assessed as safe long term",
+        short: "Nothing you’ll feel.",
+        long: "More strength and power in short, intense efforts after about four weeks of daily use." }
+    ]},
+    { title: "Amino acids", items: [
+      { name: "Taurine", unit: "mg", src: { xb: 1000, sp: 470 }, max: 3000, maxLabel: "3 g observed safe level",
+        short: "No clear effect on its own.", long: "Little evidence at this dose." },
+      { name: "L-Tyrosine", unit: "mg", src: { xb: 1000 },
+        short: "May help hold focus under stress or after little sleep.", long: "No clear evidence." },
+      { name: "L-Citrulline", unit: "mg", src: { sp: 1000 }, max: 24000, maxLabel: "24 g no-effect level",
+        short: "Boosts blood flow at much higher doses (6–8 g).", long: "Little to expect at this dose." },
+      { name: "Glycine", unit: "mg", src: { xb: 1000 },
+        short: "No energy effect. Studied for sleep at 3 g.", long: "No clear evidence." },
+      { name: "Inositol", unit: "mg", src: { xb: 1000 },
+        short: "None known.", long: "Mood studies use far higher doses." },
+      { name: "L-Threonine", unit: "mg", src: { xb: 500 },
+        short: "None known.", long: "An essential amino acid that food already covers." },
+      { name: "Acetyl-L-carnitine", unit: "mg", src: { xb: 400 }, max: 2000, maxLabel: "2 g observed safe level",
+        short: "None clear.", long: "Some evidence against mental fatigue in older adults." },
+      { name: "L-Theanine", unit: "mg", src: { xb: 100, sp: 100 },
+        short: "Calmer focus. Takes the edge off caffeine.", long: "Little evidence." },
+      { name: "Phosphatidylserine", unit: "mg", src: { sp: 200 },
+        short: "None clear.", long: "Small studies on stress and memory, mostly at 100–400 mg." },
+      { name: "Choline", unit: "mg", src: { xb: 164 }, max: 3500, maxLabel: "3.5 g US limit",
+        short: "None clear.", long: "Needed for nerves and the liver. Most people get enough from food." }
+    ]},
+    { title: "Plant extracts", items: [
+      { name: "Ashwagandha", unit: "mg", src: { xb: 200 }, flag: "No safe long-term level set by EU agencies",
+        short: "May take the edge off stress.",
+        long: "Lower stress hormone and slightly higher testosterone in 8–16 week trials. Long-term safety is debated." },
+      { name: "Sage (Cognivia)", unit: "mg", src: { sp: 400 },
+        short: "Better working memory within hours at 600 mg in one trial.", long: "The same trial saw benefits after four weeks." },
+      { name: "Lemon balm", unit: "mg", approx: true, src: { sp: 600 },
+        short: "Calmer mood in small studies.", long: "Little evidence." },
+      { name: "Rhodiola", unit: "mg", src: { xb: 100, sp: 200 },
+        short: "May reduce mental fatigue under stress.", long: "Mixed evidence." },
+      { name: "Mango leaf (Zynamite)", unit: "mg", src: { sp: 200 },
+        short: "Small studies suggest sharper attention.", long: "Little evidence." },
+      { name: "Bacopa", unit: "mg", src: { xb: 150 },
+        short: "Nothing noticeable.", long: "Better memory after 8–12 weeks in several trials." },
+      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50 },
+        short: "Small, mixed effects on focus.", long: "Mixed evidence." },
+      { name: "Chokeberry (BrainBerry)", unit: "mg", src: { sp: 65 },
+        short: "Little evidence.", long: "Antioxidant polyphenols. Small studies only." }
+    ]},
+    { title: "Eyes", items: [
+      { name: "Lutein", unit: "mg", src: { sp: 7 },
+        short: "Nothing noticeable.", long: "Builds up in the eye’s macula over months. Usually studied at 10 mg." },
+      { name: "Astaxanthin", unit: "mg", src: { sp: 4 }, max: 8, maxLabel: "8 mg EU max",
+        short: "Nothing noticeable.", long: "Small studies on eye fatigue." },
+      { name: "Zeaxanthin", unit: "mg", src: { sp: 0.7 },
+        short: "Nothing noticeable.", long: "Builds up in the macula alongside lutein." }
+    ]},
+    { title: "Vitamins", items: [
+      { name: "Vitamin C", unit: "mg", src: { tet: 80, xb: 100, sp: 18 }, short: VIT_SHORT, long: "Supports the immune system. No extra energy if your diet covers it." },
+      { name: "Vitamin A (retinol)", unit: "µg", src: { xb: 400 }, max: 3000, short: VIT_SHORT, long: "Vision and immune system." },
+      { name: "Beta-carotene (as vitamin A)", unit: "µg", src: { tet: 800 }, flag: "No limit set. Smokers should avoid supplements with it", short: VIT_SHORT, long: "Converted to vitamin A as needed." },
+      { name: "Vitamin D3", unit: "µg", src: { tet: 5 }, max: 100, short: VIT_SHORT, long: "Bones and immune system. Often low in winter." },
+      { name: "Vitamin E", unit: "mg", src: { tet: 12, sp: 5.5 }, max: 300, short: VIT_SHORT, long: "Protects cells from oxidative damage." },
+      { name: "Vitamin B1", unit: "mg", src: { tet: 1.1, xb: 2, sp: 0.3 }, short: VIT_SHORT, long: "Turns carbs into energy." },
+      { name: "Vitamin B2", unit: "mg", src: { tet: 1.4, sp: 0.4 }, short: VIT_SHORT, long: "Energy metabolism." },
+      { name: "Niacin (nicotinamide)", unit: "mg", src: { tet: 16, xb: 16, sp: 4 }, max: 900, short: "No flush with this form. " + VIT_SHORT, long: "Energy metabolism." },
+      { name: "Vitamin B6", unit: "mg", src: { tet: 1.4, xb: 3, sp: 0.4 }, max: 12, short: VIT_SHORT, long: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves." },
+      { name: "Folic acid", unit: "µg", src: { tet: 200, xb: 200, sp: 45 }, max: 1000, short: VIT_SHORT, long: "Making new blood cells." },
+      { name: "Vitamin B12", unit: "µg", src: { tet: 2.5, xb: 5, sp: 0.6 }, short: VIT_SHORT, long: "Blood and nerves. The body absorbs only a small share of high doses." },
+      { name: "Biotin", unit: "µg", src: { tet: 50, sp: 12 }, short: VIT_SHORT, long: "Energy metabolism, skin and hair if you’re low." },
+      { name: "Pantothenic acid", unit: "mg", src: { tet: 6, sp: 1.5 }, short: VIT_SHORT, long: "Energy metabolism and mental performance." }
+    ]},
+    { title: "Minerals", items: [
+      { name: "Calcium", unit: "mg", src: { tet: 240 }, max: 2500, short: VIT_SHORT, long: "Bones and teeth." },
+      { name: "Magnesium", unit: "mg", src: { tet: 112.5 }, max: 250, maxLabel: "250 mg max from supplements", short: VIT_SHORT, long: "Muscles and nerves." },
+      { name: "Potassium", unit: "mg", src: { xb: 100 }, short: VIT_SHORT, long: "Muscle function." },
+      { name: "Iron", unit: "mg", src: { tet: 7, sp: 5 }, max: 40, short: VIT_SHORT, long: "Carries oxygen in the blood. Men rarely need extra." },
+      { name: "Zinc", unit: "mg", src: { tet: 4, sp: 3.5 }, max: 25, short: VIT_SHORT, long: "Immune system, vision and normal testosterone." },
+      { name: "Copper", unit: "mg", src: { tet: 0.5 }, max: 5, short: VIT_SHORT, long: "Iron use and connective tissue." },
+      { name: "Manganese", unit: "mg", src: { tet: 1 }, max: 8, short: VIT_SHORT, long: "Bones and energy metabolism." },
+      { name: "Selenium", unit: "µg", src: { tet: 27.5 }, max: 255, short: VIT_SHORT, long: "Thyroid and immune system." },
+      { name: "Chromium", unit: "µg", src: { tet: 20 }, short: VIT_SHORT, long: "Blood sugar control." }
+    ]}
+  ];
+
+  // Daily need = EU nutrient reference value (choline: EFSA adequate intake).
+  // Studied = dose used in the main human studies.
+  const REF = {
+    "Caffeine": { v: 75, type: "studied", note: "Alertness studies use 75 mg" },
+    "Creatine monohydrate": { v: 3, type: "studied" },
+    "L-Citrulline": { v: 6000, type: "studied" },
+    "Choline": { v: 400 },
+    "Ashwagandha": { v: 600, type: "studied" },
+    "Sage (Cognivia)": { v: 600, type: "studied" },
+    "Bacopa": { v: 300, type: "studied" },
+    "Lutein": { v: 10, type: "studied" },
+    "Zeaxanthin": { v: 2, type: "studied" },
+    "Vitamin C": { v: 80 },
+    "Vitamin A (retinol)": { v: 800, note: "Daily need 800 µg, beta-carotene adds to it" },
+    "Vitamin D3": { v: 5 },
+    "Vitamin E": { v: 12 },
+    "Vitamin B1": { v: 1.1 },
+    "Vitamin B2": { v: 1.4 },
+    "Niacin (nicotinamide)": { v: 16 },
+    "Vitamin B6": { v: 1.4 },
+    "Folic acid": { v: 200 },
+    "Vitamin B12": { v: 2.5 },
+    "Biotin": { v: 50 },
+    "Pantothenic acid": { v: 6 },
+    "Calcium": { v: 800 },
+    "Magnesium": { v: 375, note: "Daily need 375 mg, mostly from food" },
+    "Potassium": { v: 2000 },
+    "Iron": { v: 14 },
+    "Zinc": { v: 10 },
+    "Copper": { v: 1 },
+    "Manganese": { v: 2 },
+    "Selenium": { v: 55 },
+    "Chromium": { v: 40 }
+  };
+  const MAXTXT = {
+    "Caffeine": "Max 400 mg a day, 200 mg at once",
+    "Creatine monohydrate": "EFSA assessed 3 g a day as safe long term",
+    "Taurine": "Safe up to 3 g",
+    "L-Citrulline": "No side effects seen up to 24 g",
+    "Acetyl-L-carnitine": "Safe up to 2 g",
+    "Choline": "US max 3.5 g",
+    "Astaxanthin": "EU max 8 mg",
+    "Magnesium": "Max 250 mg from supplements"
+  };
+
+  const fmtNum = v => {
+    const digits = v < 1 ? 2 : v < 10 ? 1 : 0;
+    return v.toLocaleString("de-CH", { maximumFractionDigits: digits }).replace(/'/g, "’");
+  };
+  const fmt = (v, unit) => {
+    if (unit === "mg" && v >= 1000) return (v / 1000).toLocaleString("de-CH", { maximumFractionDigits: 2 }) + " g";
+    return fmtNum(v) + " " + unit;
+  };
+  const total = (item, m) => Object.entries(item.src).reduce((s, [k, v]) => s + v * (m[k] ?? 0), 0);
+
+  const ingRoot = document.getElementById("ingredients");
+  const rows = [];
+
+  GROUPS.forEach(g => {
+    const wrap = document.createElement("div");
+    wrap.className = "group";
+    wrap.innerHTML = `<h3>${g.title}</h3>`;
+    g.items.forEach(item => {
+      const d = document.createElement("details");
+      d.className = "ing";
+      d.innerHTML = `
+        <summary>
+          <span class="ing-name">${item.name}</span>
+          <span class="ing-amt"></span>
+          ${item.max || REF[item.name] ? `<span class="bar${item.max ? "" : " open"}" aria-hidden="true"><i></i>${REF[item.name] ? '<b class="tick"></b>' : ""}</span>` : ""}
+          <span class="ing-max${item.flag ? " flag" : ""}"></span>
+        </summary>
+        <div class="effects">
+          <p><b>Short term</b>${item.short}</p>
+          <p><b>Long term</b>${item.long}</p>
+        </div>`;
+      wrap.appendChild(d);
+      rows.push({ item, amt: d.querySelector(".ing-amt"), bar: d.querySelector(".bar i"), tick: d.querySelector(".tick"), max: d.querySelector(".ing-max") });
+    });
+    ingRoot.appendChild(wrap);
+  });
+
+  function render(modeKey) {
+    const m = MODES[modeKey];
+    document.body.dataset.mode = modeKey;
+    document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === modeKey)));
+
+    document.getElementById("recipe").innerHTML = RECIPE.map(r => {
+      const note = typeof r.note === "function" ? r.note(m) : r.note;
+      return `<li><span class="qty">${r.qty(m)}</span><span class="what">${r.what}${note ? ` <span>${note}</span>` : ""}</span></li>`;
+    }).join("");
+
+    document.getElementById("summary").innerHTML =
+      `<b>170–210 mg</b> caffeine, about <b>${m.cost}</b> a bottle plus the mate, and one bottle a day at most.`;
+
+    rows.forEach(({ item, amt, bar, tick, max }) => {
+      const ref = REF[item.name];
+      const v = item.caffeine ? 210 : total(item, m);
+      amt.textContent = item.caffeine ? "170–210 mg" : (item.approx ? "~" : "") + fmt(v, item.unit);
+
+      const parts = [];
+      if (ref) parts.push(ref.note || (ref.type === "studied" ? "Studies use " : "Daily need ") + fmt(ref.v, item.unit));
+      parts.push(item.max ? (MAXTXT[item.name] || "Max " + fmt(item.max, item.unit)) : (item.flag || "No EU max set"));
+      max.textContent = parts.join(". ");
+
+      if (!bar) return;
+      const scale = item.max || Math.max(v, ref.v) * 1.3;
+      bar.style.width = Math.min(100, v / scale * 100) + "%";
+      if (tick) {
+        const pos = ref.v / scale * 100;
+        tick.style.left = pos + "%";
+        tick.hidden = pos > 100;
+      }
+    });
+  }
+
+  document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => render(b.dataset.mode)));
+  render("everyday");
+})();
+</script>
+</body>
+</html>
