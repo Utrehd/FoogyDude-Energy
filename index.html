@@ -52,17 +52,21 @@ body {
   letter-spacing: -.01em;
   -webkit-font-smoothing: antialiased;
   font-synthesis: none;
-  overflow-x: hidden;
   transition: background-color .3s;
 }
-.wrap { position: relative; z-index: 1; text-shadow: 0 0 14px var(--bg), 0 0 3px var(--bg); max-width: 68rem; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
+.wrap { position: relative; z-index: 1; max-width: 68rem; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
 .display { font-family: var(--display); font-weight: 900; line-height: .86; letter-spacing: .01em; }
 p { margin: 0; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--pulse); outline-offset: 4px; }
 
 /* Fog scene: fixed layers behind the page, moved by the script at the bottom */
-.scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; }
+.scene { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; transform: translateZ(0); }
+/* A static scrim keeps the text readable over the fog, instead of a text-shadow on every line */
+.scene::after {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 75% 70% at 22% 45%, rgba(6, 10, 19, .72), rgba(6, 10, 19, 0) 72%);
+}
 .sky {
   position: absolute; inset: 0;
   background:
@@ -111,10 +115,10 @@ a { color: inherit; }
 }
 
 /* Hero */
-.hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: clamp(2.5rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem); }
-.kicker { margin-bottom: clamp(1rem, 3vh, 1.75rem); color: var(--neon); font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 0 10px var(--neon), 0 0 2px var(--bg); transition: color .4s; }
+.hero { overflow-x: clip; min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: clamp(2.5rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem); }
+.kicker { margin-bottom: clamp(1rem, 3vh, 1.75rem); color: var(--neon); font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; transition: color .4s; }
 .mark { position: relative; }
-.mark h1 { margin: 0; font-size: clamp(4.6rem, 25vw, 15.5rem); line-height: .88; text-shadow: 0 0 30px var(--bg), 0 0 60px rgba(0, 0, 0, .6); }
+.mark h1 { margin: 0; font-size: clamp(4.6rem, 25vw, 15.5rem); line-height: .88; }
 .mark h1 span { display: block; }
 /* Phones: FOGGY DUDE on one line, ENERGY on the next */
 @media (max-width: 560px) {
@@ -131,7 +135,7 @@ a { color: inherit; }
 .pulse .beat { stroke-dasharray: 140 1200; stroke-dashoffset: 140; animation: travel var(--beat) linear infinite; filter: drop-shadow(0 0 6px var(--pulse)); }
 @keyframes travel { to { stroke-dashoffset: -1000; } }
 .lede { margin-top: clamp(1.5rem, 4vh, 2.5rem); max-width: 36rem; font-size: clamp(1rem, 1.8vw, 1.2rem); line-height: 1.55; }
-.lede em { font-style: normal; color: var(--pulse); text-shadow: 0 0 12px color-mix(in srgb, var(--pulse) 70%, transparent), 0 0 2px var(--bg); transition: color .4s; }
+.lede em { font-style: normal; color: var(--pulse); transition: color .4s; }
 
 /* Mode switch: two cans side by side, the chosen one turns to face you */
 .modes { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 4vw, 3rem); max-width: 40rem; margin-top: clamp(1.5rem, 4vh, 2.5rem); }
@@ -198,11 +202,11 @@ details.ing summary::-webkit-details-marker { display: none; }
 details[open] .ing-name::after { transform: rotate(45deg); }
 .ing-amt { font-family: var(--display); font-weight: 700; font-size: 1.6rem; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
 .bar { grid-column: 1 / -1; position: relative; height: 3px; margin: .35rem 0 .1rem; background: var(--track); border-radius: 2px; }
-.bar i { display: block; height: 100%; width: 0; background: var(--ink); border-radius: 2px; box-shadow: 0 0 8px rgba(238, 243, 250, .35); transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
-.bar.over i { background: var(--warn); box-shadow: 0 0 8px var(--warn); }
+.bar i { display: block; height: 100%; width: 0; background: var(--ink); border-radius: 2px; transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
+.bar.over i { background: var(--warn); }
 .bar .tick { position: absolute; top: -7px; width: 3px; height: 17px; margin-left: -1.5px; border-radius: 2px; }
-.bar .tick.rec { left: 30%; background: var(--ok); box-shadow: 0 0 8px var(--ok); }
-.bar .tick.max { left: 70%; background: var(--stop); box-shadow: 0 0 8px var(--stop); }
+.bar .tick.rec { left: 30%; background: var(--ok); }
+.bar .tick.max { left: 70%; background: var(--stop); }
 .ing-name.flagged::before { content: "! "; color: var(--warn); }
 .effects { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 2rem; padding: .9rem 0 .4rem; max-width: 52rem; }
 .effects p { font-size: .9rem; }

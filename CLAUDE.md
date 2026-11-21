@@ -25,7 +25,8 @@ The repo is public and Pages deploys from `main` / root. Samuel asked for a publ
 ## Look
 
 - Dark only (no light theme): deep navy background, cool blue fog, neon accents. Tokens at the top of `index.html`: `--bg`, `--ink`, `--muted`, `--track`, `--pulse` (pink accent), `--neon` (cyan, used on the kicker), `--warn`. Hardcore mode swaps `--pulse` to orange and `--neon` to amber on `body[data-mode="hardcore"]`.
-- "ENERGY" in the wordmark is a neon outline in `--pulse`. On phones (560px and under) the wordmark is two lines: FOGGY DUDE on one line, sized at 19vw so it fits, then ENERGY.
+- "ENERGY" in the wordmark is a neon outline in `--pulse`.
+- Scroll performance: no text-shadow on content text, no glows on bars, no `overflow-x: hidden` on body. Readability over the fog comes from a static scrim on `.scene::after`. The fixed scene is sized with `100lvh` so mobile toolbars do not resize it. `.hero` clips the heartbeat line so the page does not scroll sideways. On phones (560px and under) the wordmark is two lines: FOGGY DUDE on one line, sized at 19vw so it fits, then ENERGY.
 - The Everyday / Hardcore switch is two inline-SVG drink cans side by side (also on mobile). The chosen can turns to face you, glows and floats; the other is tilted and dimmed. Everyday: silver can, pink bolt. Hardcore: black can, orange label, double bolt.
 - Ingredient rows show only name, amount and (where there is one) the bar. Need/max text ("Reference"), short-term and long-term effects all sit in the dropdown. A flagged ingredient gets a small "!" before its name.
 
