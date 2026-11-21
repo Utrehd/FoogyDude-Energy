@@ -221,7 +221,9 @@ details[open] .ing-name::after { transform: rotate(45deg); }
 .ref-x:hover { color: var(--ink); }
 #ref-body { margin-top: 1rem; font-size: .92rem; line-height: 1.55; }
 .ref-modal.flag #ref-body { color: var(--warn); }
-.fx-head { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .25rem; }
+.fx { grid-column: 1 / -1; }
+.fx-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1.1rem; margin-bottom: .3rem; }
+.fx-tag { display: inline-flex; align-items: baseline; gap: .45rem; }
 .fx-head b { font-weight: 400; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 .tag { font-style: normal; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; }
 .tag::before { content: "● "; }
@@ -378,54 +380,54 @@ footer p + p { margin-top: .6rem; }
 
   // What each ingredient should do. s/l = short and long term; status: "proven" or "claimed"
   const EFFECTS = {
-    "Caffeine": { s: { t: "Your alertness kicks in within 30–60 minutes and lasts a few hours. Keep each hit under 200 mg, or it turns into jitters.", status: "proven" }, l: { t: "Your body builds a tolerance with daily use, so the buzz fades while the habit stays. Late doses cut into sleep, and sleep is where the focus comes back.", status: "proven" } },
-    "Sugars": { s: { t: "A quick lift as the sugar hits your blood, then a dip a couple of hours later.", status: "proven" }, l: { t: "Every day adds up. Weight gain, tooth decay and blood-sugar swings are the price of a sugary drink habit.", status: "proven" } },
-    "Creatine monohydrate": { s: { t: "Your muscles start storing more creatine within the first week, so short, hard efforts begin to feel easier.", status: "proven" }, l: { t: "Four weeks or more of daily use means more strength and power in short, intense efforts. One of the best-studied supplements.", status: "proven" } },
-    "Taurine": { s: { t: "On its own, not much you'll feel. Taurine is already in your body, and the trials at this dose are thin.", status: "claimed" }, l: { t: "Long-term studies mostly look at heart and exercise, with mixed results at this dose.", status: "claimed" } },
-    "L-Tyrosine": { s: { t: "Some people say it helps focus under stress or after a short night.", status: "claimed" }, l: { t: "The evidence is thin. Trials in healthy people show little beyond what caffeine already does.", status: "claimed" } },
-    "L-Citrulline": { s: { t: "At 6–8 g it can improve blood flow. At 1 g you'll probably feel nothing.", status: "claimed" }, l: { t: "The studied doses are several times this one, so long-term effects at this level are unknown.", status: "claimed" } },
-    "Glycine": { s: { t: "No energy effect. It's studied for sleep at around 3 g, so this is a small part of that.", status: "claimed" }, l: { t: "Little evidence at this dose. Your body also makes glycine itself.", status: "claimed" } },
-    "Inositol": { s: { t: "Nothing you'd notice. The mood studies use far higher doses.", status: "claimed" }, l: { t: "Long-term use at this dose hasn't been studied much. Side effects only showed up at 12 g in one trial.", status: "claimed" } },
-    "L-Threonine": { s: { t: "Nothing you'll notice. It's a building block your body needs anyway.", status: "proven" }, l: { t: "Food already covers the daily need, so the drink adds little on top.", status: "proven" } },
-    "Acetyl-L-carnitine": { s: { t: "Nothing clear yet.", status: "claimed" }, l: { t: "Some studies found less mental fatigue in older adults at around 2 g a day.", status: "claimed" } },
-    "L-Carnitine L-tartrate": { s: { t: "No clear effect in the short term.", status: "claimed" }, l: { t: "Studied for muscle recovery at 1–2 g, so this dose sits well below what the trials used.", status: "claimed" } },
-    "L-Theanine": { s: { t: "A calmer kind of focus. It can take the edge off caffeine, which is why tea drinkers like it.", status: "claimed" }, l: { t: "Little evidence for long-term effects at this dose.", status: "claimed" } },
-    "Phosphatidylserine": { s: { t: "Nothing clear yet.", status: "claimed" }, l: { t: "Small studies on stress and memory, mostly at 100–400 mg a day.", status: "claimed" } },
-    "Choline": { s: { t: "Nothing clear you'll feel.", status: "claimed" }, l: { t: "Your nerves and liver need it. Most people already get enough from food.", status: "proven" } },
-    "Ashwagandha": { s: { t: "May take the edge off stress.", status: "claimed" }, l: { t: "Trials of 8–16 weeks show lower stress hormones and slightly higher testosterone. Long-term safety is still debated, which is why it's flagged.", status: "claimed" } },
-    "Sage (Cognivia)": { s: { t: "One trial saw better working memory within hours at 600 mg.", status: "claimed" }, l: { t: "The same trial saw benefits after four weeks.", status: "claimed" } },
-    "Lemon balm": { s: { t: "Calmer mood in small studies.", status: "claimed" }, l: { t: "Little evidence beyond those small studies.", status: "claimed" } },
-    "Rhodiola": { s: { t: "May ease mental fatigue under stress.", status: "claimed" }, l: { t: "The EU's herbal monograph lists it for stress-related tiredness, and advises seeing a doctor if it goes on past two weeks.", status: "claimed" } },
-    "Mango leaf (Zynamite)": { s: { t: "Small studies suggest sharper attention.", status: "claimed" }, l: { t: "Little evidence beyond short trials, and they were funded by the company that sells it.", status: "claimed" } },
-    "Bacopa": { s: { t: "Nothing noticeable on day one.", status: "claimed" }, l: { t: "Several trials show better memory after 8–12 weeks of daily use.", status: "claimed" } },
-    "Ginseng": { s: { t: "Small, mixed effects on focus.", status: "claimed" }, l: { t: "Mixed evidence. The EU lists it for fatigue for up to three months.", status: "claimed" } },
-    "Guarana extract": { s: { t: "Little to feel at this dose.", status: "claimed" }, l: { t: "It contains natural caffeine, but at 10 mg the amount is small. The caffeine total is what counts.", status: "proven" } },
-    "Chokeberry (BrainBerry)": { s: { t: "Little evidence for a short-term effect.", status: "claimed" }, l: { t: "Antioxidant plant compounds, with only small studies so far.", status: "claimed" } },
-    "Lutein": { s: { t: "Nothing you'll notice quickly.", status: "claimed" }, l: { t: "Builds up in the eye's macula over months. Eye-health trials used 10 mg a day.", status: "proven" } },
-    "Astaxanthin": { s: { t: "Nothing noticeable.", status: "claimed" }, l: { t: "Small studies on eye fatigue.", status: "claimed" } },
-    "Zeaxanthin": { s: { t: "Nothing noticeable.", status: "claimed" }, l: { t: "Builds up in the macula alongside lutein.", status: "proven" } },
-    "Beta-carotene (as vitamin A)": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Your body turns it into vitamin A as needed, so you get only what you require.", status: "proven" } },
-    "Vitamin A (retinol)": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps your eyes and immune system work. Only a problem in excess.", status: "proven" } },
-    "Vitamin C": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Supports the immune system. No extra energy if your diet already covers it.", status: "proven" } },
-    "Vitamin D3": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and immune system. Often low in winter.", status: "proven" } },
-    "Vitamin E": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Protects cells from oxidative damage.", status: "proven" } },
-    "Vitamin B1": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Turns carbs into energy.", status: "proven" } },
-    "Vitamin B2": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps the body turn food into energy.", status: "proven" } },
-    "Niacin (nicotinamide)": { s: { t: "No flush with this form. You won't feel it unless you're low.", status: "proven" }, l: { t: "Helps the body turn food into energy.", status: "proven" } },
-    "Vitamin B6": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves.", status: "proven" } },
-    "Folic acid": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps make new blood cells.", status: "proven" } },
-    "Vitamin B12": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Blood and nerves. The body absorbs only a small share of high doses.", status: "proven" } },
-    "Biotin": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps energy metabolism. Skin and hair benefits show up mainly when you're deficient.", status: "proven" } },
-    "Pantothenic acid": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps the body turn food into energy. Mental-performance benefits are claimed, not proven.", status: "proven" } },
-    "Calcium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and teeth.", status: "proven" } },
-    "Magnesium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Muscles and nerves.", status: "proven" } },
-    "Potassium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Muscle function.", status: "proven" } },
-    "Iron": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Carries oxygen in the blood. Men rarely need extra.", status: "proven" } },
-    "Zinc": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Immune system and vision. The testosterone link only matters if you're low.", status: "proven" } },
-    "Copper": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Iron use and connective tissue.", status: "proven" } },
-    "Manganese": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and energy metabolism.", status: "proven" } },
-    "Selenium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Thyroid and immune system.", status: "proven" } },
-    "Chromium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Blood sugar control is claimed, and the evidence is mixed.", status: "claimed" } },
+    "Caffeine": { when: ["short", "long"], s: { t: "Your alertness kicks in within 30–60 minutes and lasts a few hours. Keep each hit under 200 mg, or it turns into jitters.", status: "proven" }, l: { t: "Your body builds a tolerance with daily use, so the buzz fades while the habit stays. Late doses cut into sleep, and sleep is where the focus comes back.", status: "proven" } },
+    "Sugars": { when: ["short", "long"], s: { t: "A quick lift as the sugar hits your blood, then a dip a couple of hours later.", status: "proven" }, l: { t: "Every day adds up. Weight gain, tooth decay and blood-sugar swings are the price of a sugary drink habit.", status: "proven" } },
+    "Creatine monohydrate": { when: ["short", "long"], s: { t: "Your muscles start storing more creatine within the first week, so short, hard efforts begin to feel easier.", status: "proven" }, l: { t: "Four weeks or more of daily use means more strength and power in short, intense efforts. One of the best-studied supplements.", status: "proven" } },
+    "Taurine": { when: ["long"], s: { t: "On its own, not much you'll feel. Taurine is already in your body, and the trials at this dose are thin.", status: "claimed" }, l: { t: "Long-term studies mostly look at heart and exercise, with mixed results at this dose.", status: "claimed" } },
+    "L-Tyrosine": { when: ["short"], s: { t: "Some people say it helps focus under stress or after a short night.", status: "claimed" }, l: { t: "The evidence is thin. Trials in healthy people show little beyond what caffeine already does.", status: "claimed" } },
+    "L-Citrulline": { when: ["short"], s: { t: "At 6–8 g it can improve blood flow. At 1 g you'll probably feel nothing.", status: "claimed" }, l: { t: "The studied doses are several times this one, so long-term effects at this level are unknown.", status: "claimed" } },
+    "Glycine": { when: ["short"], s: { t: "No energy effect. It's studied for sleep at around 3 g, so this is a small part of that.", status: "claimed" }, l: { t: "Little evidence at this dose. Your body also makes glycine itself.", status: "claimed" } },
+    "Inositol": { when: ["long"], s: { t: "Nothing you'd notice. The mood studies use far higher doses.", status: "claimed" }, l: { t: "Long-term use at this dose hasn't been studied much. Side effects only showed up at 12 g in one trial.", status: "claimed" } },
+    "L-Threonine": { when: ["long"], s: { t: "Nothing you'll notice. It's a building block your body needs anyway.", status: "proven" }, l: { t: "Food already covers the daily need, so the drink adds little on top.", status: "proven" } },
+    "Acetyl-L-carnitine": { when: ["long"], s: { t: "Nothing clear yet.", status: "claimed" }, l: { t: "Some studies found less mental fatigue in older adults at around 2 g a day.", status: "claimed" } },
+    "L-Carnitine L-tartrate": { when: ["long"], s: { t: "No clear effect in the short term.", status: "claimed" }, l: { t: "Studied for muscle recovery at 1–2 g, so this dose sits well below what the trials used.", status: "claimed" } },
+    "L-Theanine": { when: ["short"], s: { t: "A calmer kind of focus. It can take the edge off caffeine, which is why tea drinkers like it.", status: "claimed" }, l: { t: "Little evidence for long-term effects at this dose.", status: "claimed" } },
+    "Phosphatidylserine": { when: ["long"], s: { t: "Nothing clear yet.", status: "claimed" }, l: { t: "Small studies on stress and memory, mostly at 100–400 mg a day.", status: "claimed" } },
+    "Choline": { when: ["long"], s: { t: "Nothing clear you'll feel.", status: "claimed" }, l: { t: "Your nerves and liver need it. Most people already get enough from food.", status: "proven" } },
+    "Ashwagandha": { when: ["short", "long"], s: { t: "May take the edge off stress.", status: "claimed" }, l: { t: "Trials of 8–16 weeks show lower stress hormones and slightly higher testosterone. Long-term safety is still debated, which is why it's flagged.", status: "claimed" } },
+    "Sage (Cognivia)": { when: ["short", "long"], s: { t: "One trial saw better working memory within hours at 600 mg.", status: "claimed" }, l: { t: "The same trial saw benefits after four weeks.", status: "claimed" } },
+    "Lemon balm": { when: ["short"], s: { t: "Calmer mood in small studies.", status: "claimed" }, l: { t: "Little evidence beyond those small studies.", status: "claimed" } },
+    "Rhodiola": { when: ["short"], s: { t: "May ease mental fatigue under stress.", status: "claimed" }, l: { t: "The EU's herbal monograph lists it for stress-related tiredness, and advises seeing a doctor if it goes on past two weeks.", status: "claimed" } },
+    "Mango leaf (Zynamite)": { when: ["short"], s: { t: "Small studies suggest sharper attention.", status: "claimed" }, l: { t: "Little evidence beyond short trials, and they were funded by the company that sells it.", status: "claimed" } },
+    "Bacopa": { when: ["long"], s: { t: "Nothing noticeable on day one.", status: "claimed" }, l: { t: "Several trials show better memory after 8–12 weeks of daily use.", status: "claimed" } },
+    "Ginseng": { when: ["short"], s: { t: "Small, mixed effects on focus.", status: "claimed" }, l: { t: "Mixed evidence. The EU lists it for fatigue for up to three months.", status: "claimed" } },
+    "Guarana extract": { when: ["short"], s: { t: "Little to feel at this dose.", status: "claimed" }, l: { t: "It contains natural caffeine, but at 10 mg the amount is small. The caffeine total is what counts.", status: "proven" } },
+    "Chokeberry (BrainBerry)": { when: ["long"], s: { t: "Little evidence for a short-term effect.", status: "claimed" }, l: { t: "Antioxidant plant compounds, with only small studies so far.", status: "claimed" } },
+    "Lutein": { when: ["long"], s: { t: "Nothing you'll notice quickly.", status: "claimed" }, l: { t: "Builds up in the eye's macula over months. Eye-health trials used 10 mg a day.", status: "proven" } },
+    "Astaxanthin": { when: ["long"], s: { t: "Nothing noticeable.", status: "claimed" }, l: { t: "Small studies on eye fatigue.", status: "claimed" } },
+    "Zeaxanthin": { when: ["long"], s: { t: "Nothing noticeable.", status: "claimed" }, l: { t: "Builds up in the macula alongside lutein.", status: "proven" } },
+    "Beta-carotene (as vitamin A)": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Your body turns it into vitamin A as needed, so you get only what you require.", status: "proven" } },
+    "Vitamin A (retinol)": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps your eyes and immune system work. Only a problem in excess.", status: "proven" } },
+    "Vitamin C": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Supports the immune system. No extra energy if your diet already covers it.", status: "proven" } },
+    "Vitamin D3": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and immune system. Often low in winter.", status: "proven" } },
+    "Vitamin E": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Protects cells from oxidative damage.", status: "proven" } },
+    "Vitamin B1": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Turns carbs into energy.", status: "proven" } },
+    "Vitamin B2": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps the body turn food into energy.", status: "proven" } },
+    "Niacin (nicotinamide)": { when: ["long"], s: { t: "No flush with this form. You won't feel it unless you're low.", status: "proven" }, l: { t: "Helps the body turn food into energy.", status: "proven" } },
+    "Vitamin B6": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves.", status: "proven" } },
+    "Folic acid": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps make new blood cells.", status: "proven" } },
+    "Vitamin B12": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Blood and nerves. The body absorbs only a small share of high doses.", status: "proven" } },
+    "Biotin": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps energy metabolism. Skin and hair benefits show up mainly when you're deficient.", status: "proven" } },
+    "Pantothenic acid": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps the body turn food into energy. Mental-performance benefits are claimed, not proven.", status: "proven" } },
+    "Calcium": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and teeth.", status: "proven" } },
+    "Magnesium": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Muscles and nerves.", status: "proven" } },
+    "Potassium": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Muscle function.", status: "proven" } },
+    "Iron": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Carries oxygen in the blood. Men rarely need extra.", status: "proven" } },
+    "Zinc": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Immune system and vision. The testosterone link only matters if you're low.", status: "proven" } },
+    "Copper": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Iron use and connective tissue.", status: "proven" } },
+    "Manganese": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and energy metabolism.", status: "proven" } },
+    "Selenium": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Thyroid and immune system.", status: "proven" } },
+    "Chromium": { when: ["long"], s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Blood sugar control is claimed, and the evidence is mixed.", status: "claimed" } },
   };
 
   // src: amount per full serving of each product. max: daily max in the same unit.
@@ -592,14 +594,19 @@ footer p + p { margin-top: .6rem; }
   ingRoot.appendChild(lists.bar);
   moreRoot.appendChild(lists.more);
 
-  const fxBlock = (label, o) => `<div class="fx">
-            <div class="fx-head"><b>${label}</b><i class="tag ${o.status}">${o.status === "proven" ? "Proven" : "Claimed"}</i></div>
-            <p>${o.t}</p>
-          </div>`;
+  // One paragraph with both sentences; the tags show which timeframes apply, each with its own status
+  const fxBlock = fx => {
+    const text = [fx.s.t, fx.l.t].filter(Boolean).join(" ");
+    const tags = fx.when.map(w => {
+      const o = w === "short" ? fx.s : fx.l;
+      return `<span class="fx-tag"><b>${w === "short" ? "Short term" : "Long term"}</b><i class="tag ${o.status}">${o.status === "proven" ? "Proven" : "Claimed"}</i></span>`;
+    }).join("");
+    return `<div class="fx"><div class="fx-head">${tags}</div><p>${text}</p></div>`;
+  };
 
   GROUPS.forEach(g => {
     g.items.forEach(item => {
-      const fx = EFFECTS[item.name] || { s: { t: "", status: "claimed" }, l: { t: "", status: "claimed" } };
+      const fx = EFFECTS[item.name] || { when: [], s: { t: "", status: "claimed" }, l: { t: "", status: "claimed" } };
       const withBar = hasBar(item);
       const wrap = lists[withBar ? "bar" : "more"];
       const d = document.createElement("details");
@@ -611,8 +618,7 @@ footer p + p { margin-top: .6rem; }
           ${withBar ? `<span class="bar" aria-hidden="true"><i></i>${recOf(item) != null ? '<b class="tick rec"></b>' : ""}${item.max ? '<b class="tick max"></b>' : ""}</span>` : ""}
         </summary>
         <div class="effects">
-          ${fxBlock("Short term", fx.s)}
-          ${fxBlock("Long term", fx.l)}
+          ${fxBlock(fx)}
           <p class="ref-row"><button type="button" class="ref-btn${item.flag ? " flag" : ""}" aria-haspopup="dialog">Reference</button></p>
           <span class="ing-max" hidden></span>
         </div>`;
