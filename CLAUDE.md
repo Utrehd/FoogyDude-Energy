@@ -27,7 +27,7 @@ The repo is public and Pages deploys from `main` / root. Samuel asked for a publ
 - Dark only (no light theme): deep navy background, cool blue fog, neon accents. Tokens at the top of `index.html`: `--bg`, `--ink`, `--muted`, `--track`, `--pulse` (pink accent), `--neon` (cyan, used on the kicker), `--warn`. Hardcore mode swaps `--pulse` to orange and `--neon` to amber on `body[data-mode="hardcore"]`.
 - "ENERGY" in the wordmark is a neon outline in `--pulse`.
 - The Everyday / Hardcore switch is two inline-SVG drink cans side by side (also on mobile). The chosen can turns to face you, glows and floats; the other is tilted and dimmed. Everyday: silver can, pink bolt. Hardcore: black can, orange label, double bolt.
-- Ingredient rows show only name, amount and bar. Need/max text ("Reference"), short-term and long-term effects all sit in the dropdown. A flagged ingredient gets a small "!" before its name.
+- Ingredient rows show only name, amount and (where there is one) the bar. Need/max text ("Reference"), short-term and long-term effects all sit in the dropdown. A flagged ingredient gets a small "!" before its name.
 
 ## Fog scene
 
@@ -51,7 +51,9 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 
 - Modern and minimal, **no boxes or cards**, little text.
 - Two versions with a toggle: **Everyday** and **Hardcore session**.
-- A visual list of every ingredient: red line = one bottle, short black tick = daily need or studied dose, line ends at the daily max, fading line = no max set. Tap a row for short-term and long-term effects.
+- A visual list of every ingredient. Ingredients with both a recommended dose (`REF`: daily need or studied dose) and a max, with the recommended dose below the max, get a bar. Every bar has the same marks: a **green** tick at 30% (recommended) and a **red** tick at 70% (max). The white fill is piecewise: 0 to the recommended dose fills 0–30%, recommended to max fills 30–70%, and beyond the max fills 70–100% (full at twice the max) and turns orange. See `barPos()` in the script.
+- Ingredients missing either number, or where the recommended dose is not below the max (creatine, magnesium), go in a second section, "No bar yet", with name and amount only. Add the missing `REF` / `max` and the row moves up to the bars section on its own.
+- Tap a row for the reference text and short-term and long-term effects.
 
 ## How the data works (all in the `<script>` of `index.html`)
 
