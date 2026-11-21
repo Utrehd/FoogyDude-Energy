@@ -59,7 +59,7 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 ## How the data works (all in the `<script>` of `index.html`)
 
 - `MODES`: how much of each product goes in. Everyday: XBEAM 1 scoop, Sponser ⅓ serving (5 g), tetesept 1 tablet, creatine 3 g. Hardcore: same but Sponser full (15 g), and the drink swaps: Everyday uses one 330 ml can of El Tony Mate Classic (`et`, Migros), Hardcore one 500 ml can of Monster Energy Original, the sugared green one (`mo`). Water tops the bottle up to 600 ml in both (`water`: 270 ml Everyday, 100 ml Hardcore). Caffeine is per mode in `caff`: Everyday 226 mg (XBEAM 150 + El Tony 76), Hardcore 310 mg (XBEAM 150 + Monster 160). Rows whose total is 0 in a mode (e.g. L-carnitine L-tartrate in Everyday) are hidden, and a row that goes over its max, or caffeine above 200 mg at once, gets the "!" marker, an orange bar and a warning line in its dropdown.
-- `RECIPE`: the "In the bottle" list.
+- `RECIPE`: the "Cook list" list, inside a dropdown that is closed by default. The summary line and the how-to line stay visible below it.
 - `GROUPS`: every ingredient with `src` = amount per full serving of each product (`xb` XBEAM, `sp` Sponser, `tet` tetesept, `cr` creatine), optional `max`, `flag`, and short/long-term effect text.
 - `REF`: daily need (EU NRV) or studied dose per ingredient, drawn as the tick.
 - `MAXTXT`: custom wording for non-standard limits.
