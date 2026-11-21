@@ -11,6 +11,7 @@ Live preview (claude.ai artifact, private to Samuel): https://claude.ai/artifact
 | File | Purpose |
 |---|---|
 | `index.html` | The whole site in one file (HTML, CSS, JS inline). Google Fonts: Big Shoulders Display (wordmark, headings) + Fragment Mono (everything else). |
+| `foggy-dude.webp` | The Foggy Dude silhouette used in the fog scene |
 | `foggy-dude-energy.svg` | Animated hero image (wordmark, fog, Foggy Dude, heartbeat line) |
 | `foggy-dude-energy.jpg` | Still 1200×630 image for link previews (`og:image`), rendered from the SVG with Playwright |
 | `.nojekyll` | Makes GitHub Pages serve files as they are |
@@ -23,10 +24,11 @@ The repo is public and Pages deploys from `main` / root. Samuel asked for a publ
 
 ## Fog scene
 
-- `.scene` is a fixed layer behind `main`: sky gradient with a backlight, three fog layers (`.f1`–`.f3`), and the Foggy Dude SVG between the far and near fog.
+- `.scene` is a fixed layer behind `main`: sky gradient with a backlight, three fog layers (`.f1`–`.f3`), and the Foggy Dude (`foggy-dude.webp`, 811×1100 with transparency) between the far and near fog.
 - Fog tiles are inline SVG `feTurbulence` data URIs (1200×700, `stitchTiles`), so there are no image files to load.
-- The script at the bottom drifts the fog sideways, moves layers at different speeds on scroll (`data-depth`), nudges them with the pointer, and sets `--clear` (0 to 1 over the first screen) so the fog thins as you scroll. Hardcore mode drifts faster, and the shades glow on the `--beat`.
-- `prefers-reduced-motion` stops the drift, parallax and glow; the fog still thins on scroll.
+- The script at the bottom drifts the fog sideways, moves layers at different speeds on scroll (`data-depth`), nudges them with the pointer, and sets `--clear` (0 to 1 over the first screen) so the fog thins as you scroll. Hardcore mode drifts the fog faster.
+- `prefers-reduced-motion` stops the drift and parallax; the fog still thins on scroll.
+- `foggy-dude.webp` comes from a photo of Samuel: cut out with rembg (`u2net_human_seg`), then darkened to a navy silhouette with a faint trace of the photo, a cool backlight rim, film grain, faint scratches, and the legs fading into fog. The original photo is not in the repo.
 
 ## Task 2 (optional, ask first): restyle with his "Pulse" style
 

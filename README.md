@@ -9,6 +9,7 @@ Clears the fog. A home-mixed energy and vitamin drink, min-maxed. The page shows
 ## Files
 
 - `index.html` — the whole site in one file, including the fog background (drifting layers with scroll parallax) and the Foggy Dude figure
+- `foggy-dude.webp` — the Foggy Dude: Samuel's photo cut out and turned into a dark, grainy silhouette for the fog
 - `foggy-dude-energy.svg` — animated hero image
 - `foggy-dude-energy.jpg` — still image for link previews
 - `.nojekyll` — tells GitHub Pages to serve the files as they are

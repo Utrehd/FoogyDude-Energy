@@ -26,9 +26,6 @@
       <feGaussianBlur stdDeviation="7" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="soft" x="-30%" y="-80%" width="160%" height="260%">
-      <feGaussianBlur stdDeviation="9"/>
-    </filter>
   </defs>
 
   <rect width="1200" height="630" fill="url(#sky)"/>
@@ -36,15 +33,7 @@
   <rect width="1200" height="630" filter="url(#fogA)" opacity=".7"/>
 
   <!-- The Foggy Dude -->
-  <g transform="translate(800 60)">
-    <path fill="#03060C" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600H384C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120Z"/>
-    <path fill="none" stroke="#B4CDF0" stroke-opacity=".45" stroke-width="2.5" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600M384 600C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120"/>
-    <path fill="#000" d="M200 196C154 196 134 236 136 282C138 328 164 360 200 366C236 360 262 328 264 282C266 236 246 196 200 196Z"/>
-    <path fill="#FF3D6E" filter="url(#soft)" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z">
-      <animate attributeName="opacity" values=".55;1;.7;.55" keyTimes="0;.12;.3;1" dur="2.4s" repeatCount="indefinite"/>
-    </path>
-    <path fill="#FF3D6E" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z"/>
-  </g>
+  <image href="foggy-dude.webp" x="770" y="30" width="444" height="602"/>
 
   <rect width="1200" height="630" filter="url(#fogB)" mask="url(#low)"/>
 

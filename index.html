@@ -123,20 +123,12 @@ a { color: inherit; }
 /* The Foggy Dude */
 .dude {
   position: absolute; bottom: -2vh; right: max(-6vw, calc(50vw - 46rem));
-  height: min(96vh, 1000px); width: auto; aspect-ratio: 2 / 3;
+  height: min(96vh, 1000px); width: auto; aspect-ratio: 811 / 1100;
   opacity: calc(var(--dude-op) * (1 - var(--clear) * .75));
   will-change: transform;
 }
-.dude .body { fill: var(--shade); }
-.dude .rim { fill: none; stroke: var(--rim); stroke-width: 2.5; }
-.dude .face { fill: var(--void); }
-.dude .shades, .dude .shades-glow { fill: var(--pulse); transition: fill .4s; }
-.dude .shades-glow { filter: blur(9px); animation: glow var(--beat) ease-in-out infinite; }
-@keyframes glow { 0%, 100% { opacity: .55; } 12% { opacity: 1; } 30% { opacity: .7; } }
 @media (max-width: 760px) {
-  .dude { height: 64vh; right: -28vw; bottom: -10vh; }
-  .dude .shades-glow { display: none; }
-  .dude .shades { opacity: .55; }
+  .dude { height: 66vh; right: -30vw; bottom: -6vh; }
   :root { --dude-op: .22; }
 }
 @media (max-width: 760px) and (prefers-color-scheme: dark) {
@@ -215,7 +207,6 @@ footer p + p { margin-top: .6rem; }
 
 @media (prefers-reduced-motion: reduce) {
   .pulse .beat { animation: none; stroke-dasharray: none; }
-  .dude .shades-glow { animation: none; }
   .bar i, .bar .tick, body { transition: none; }
 }
 </style>
@@ -224,24 +215,7 @@ footer p + p { margin-top: .6rem; }
 <div class="scene" aria-hidden="true">
   <div class="sky"></div>
   <div class="fog f1" data-depth=".08" data-drift="7"><div></div></div>
-  <svg class="dude" viewBox="0 0 400 600">
-    <defs>
-      <linearGradient id="dudeFade" x1="0" y1="0" x2="0" y2="1">
-        <stop offset=".55" stop-color="#fff"/>
-        <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-      </linearGradient>
-      <mask id="dudeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="600">
-        <rect width="400" height="600" fill="url(#dudeFade)"/>
-      </mask>
-    </defs>
-    <g mask="url(#dudeMask)">
-      <path class="body" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600H384C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120Z"/>
-      <path class="rim" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600M384 600C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120"/>
-      <path class="face" d="M200 196C154 196 134 236 136 282C138 328 164 360 200 366C236 360 262 328 264 282C266 236 246 196 200 196Z"/>
-      <path class="shades-glow" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z"/>
-      <path class="shades" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z"/>
-    </g>
-  </svg>
+  <img class="dude" src="foggy-dude.webp" alt="" width="811" height="1100" decoding="async" fetchpriority="high">
   <div class="fog f2" data-depth=".22" data-drift="14"><div></div></div>
   <div class="fog f3" data-depth=".45" data-drift="26"><div></div></div>
 </div>
