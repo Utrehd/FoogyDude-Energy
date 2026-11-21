@@ -209,7 +209,7 @@ details[open] .ing-name::after { transform: rotate(45deg); }
 .bar .tick.max { left: 70%; background: var(--stop); }
 .ing-name.flagged::before { content: "! "; color: var(--warn); }
 .effects { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 2rem; padding: .9rem 0 .4rem; max-width: 52rem; }
-.effects p { font-size: .9rem; }
+.effects { align-items: start; }
 .ref-row { grid-column: 1 / -1; }
 .ref-btn { background: none; border: 0; padding: .15rem 0; cursor: pointer; font: inherit; font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: var(--neon); border-bottom: 1px solid currentColor; transition: color .4s; -webkit-tap-highlight-color: transparent; }
 .ref-btn.flag { color: var(--warn); }
@@ -221,7 +221,13 @@ details[open] .ing-name::after { transform: rotate(45deg); }
 .ref-x:hover { color: var(--ink); }
 #ref-body { margin-top: 1rem; font-size: .92rem; line-height: 1.55; }
 .ref-modal.flag #ref-body { color: var(--warn); }
-.effects b { display: block; font-weight: 400; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
+.fx-head { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .25rem; }
+.fx-head b { font-weight: 400; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.tag { font-style: normal; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; }
+.tag::before { content: "● "; }
+.tag.proven { color: var(--ok); }
+.tag.claimed { color: var(--warn); }
+.fx p { font-size: .95rem; line-height: 1.5; }
 @media (max-width: 560px) {
   .effects { grid-template-columns: 1fr; }
 }
@@ -369,103 +375,124 @@ footer p + p { margin-top: .6rem; }
     { key: "w",   qty: m => m.water + " ml", what: "Water", note: "tops it up to 600 ml" }
   ];
 
-  const VIT_SHORT = "Nothing you’ll feel unless you’re low.";
+
+  // What each ingredient should do. s/l = short and long term; status: "proven" or "claimed"
+  const EFFECTS = {
+    "Caffeine": { s: { t: "Your alertness kicks in within 30–60 minutes and lasts a few hours. Keep each hit under 200 mg, or it turns into jitters.", status: "proven" }, l: { t: "Your body builds a tolerance with daily use, so the buzz fades while the habit stays. Late doses cut into sleep, and sleep is where the focus comes back.", status: "proven" } },
+    "Sugars": { s: { t: "A quick lift as the sugar hits your blood, then a dip a couple of hours later.", status: "proven" }, l: { t: "Every day adds up. Weight gain, tooth decay and blood-sugar swings are the price of a sugary drink habit.", status: "proven" } },
+    "Creatine monohydrate": { s: { t: "Your muscles start storing more creatine within the first week, so short, hard efforts begin to feel easier.", status: "proven" }, l: { t: "Four weeks or more of daily use means more strength and power in short, intense efforts. One of the best-studied supplements.", status: "proven" } },
+    "Taurine": { s: { t: "On its own, not much you'll feel. Taurine is already in your body, and the trials at this dose are thin.", status: "claimed" }, l: { t: "Long-term studies mostly look at heart and exercise, with mixed results at this dose.", status: "claimed" } },
+    "L-Tyrosine": { s: { t: "Some people say it helps focus under stress or after a short night.", status: "claimed" }, l: { t: "The evidence is thin. Trials in healthy people show little beyond what caffeine already does.", status: "claimed" } },
+    "L-Citrulline": { s: { t: "At 6–8 g it can improve blood flow. At 1 g you'll probably feel nothing.", status: "claimed" }, l: { t: "The studied doses are several times this one, so long-term effects at this level are unknown.", status: "claimed" } },
+    "Glycine": { s: { t: "No energy effect. It's studied for sleep at around 3 g, so this is a small part of that.", status: "claimed" }, l: { t: "Little evidence at this dose. Your body also makes glycine itself.", status: "claimed" } },
+    "Inositol": { s: { t: "Nothing you'd notice. The mood studies use far higher doses.", status: "claimed" }, l: { t: "Long-term use at this dose hasn't been studied much. Side effects only showed up at 12 g in one trial.", status: "claimed" } },
+    "L-Threonine": { s: { t: "Nothing you'll notice. It's a building block your body needs anyway.", status: "proven" }, l: { t: "Food already covers the daily need, so the drink adds little on top.", status: "proven" } },
+    "Acetyl-L-carnitine": { s: { t: "Nothing clear yet.", status: "claimed" }, l: { t: "Some studies found less mental fatigue in older adults at around 2 g a day.", status: "claimed" } },
+    "L-Carnitine L-tartrate": { s: { t: "No clear effect in the short term.", status: "claimed" }, l: { t: "Studied for muscle recovery at 1–2 g, so this dose sits well below what the trials used.", status: "claimed" } },
+    "L-Theanine": { s: { t: "A calmer kind of focus. It can take the edge off caffeine, which is why tea drinkers like it.", status: "claimed" }, l: { t: "Little evidence for long-term effects at this dose.", status: "claimed" } },
+    "Phosphatidylserine": { s: { t: "Nothing clear yet.", status: "claimed" }, l: { t: "Small studies on stress and memory, mostly at 100–400 mg a day.", status: "claimed" } },
+    "Choline": { s: { t: "Nothing clear you'll feel.", status: "claimed" }, l: { t: "Your nerves and liver need it. Most people already get enough from food.", status: "proven" } },
+    "Ashwagandha": { s: { t: "May take the edge off stress.", status: "claimed" }, l: { t: "Trials of 8–16 weeks show lower stress hormones and slightly higher testosterone. Long-term safety is still debated, which is why it's flagged.", status: "claimed" } },
+    "Sage (Cognivia)": { s: { t: "One trial saw better working memory within hours at 600 mg.", status: "claimed" }, l: { t: "The same trial saw benefits after four weeks.", status: "claimed" } },
+    "Lemon balm": { s: { t: "Calmer mood in small studies.", status: "claimed" }, l: { t: "Little evidence beyond those small studies.", status: "claimed" } },
+    "Rhodiola": { s: { t: "May ease mental fatigue under stress.", status: "claimed" }, l: { t: "The EU's herbal monograph lists it for stress-related tiredness, and advises seeing a doctor if it goes on past two weeks.", status: "claimed" } },
+    "Mango leaf (Zynamite)": { s: { t: "Small studies suggest sharper attention.", status: "claimed" }, l: { t: "Little evidence beyond short trials, and they were funded by the company that sells it.", status: "claimed" } },
+    "Bacopa": { s: { t: "Nothing noticeable on day one.", status: "claimed" }, l: { t: "Several trials show better memory after 8–12 weeks of daily use.", status: "claimed" } },
+    "Ginseng": { s: { t: "Small, mixed effects on focus.", status: "claimed" }, l: { t: "Mixed evidence. The EU lists it for fatigue for up to three months.", status: "claimed" } },
+    "Guarana extract": { s: { t: "Little to feel at this dose.", status: "claimed" }, l: { t: "It contains natural caffeine, but at 10 mg the amount is small. The caffeine total is what counts.", status: "proven" } },
+    "Chokeberry (BrainBerry)": { s: { t: "Little evidence for a short-term effect.", status: "claimed" }, l: { t: "Antioxidant plant compounds, with only small studies so far.", status: "claimed" } },
+    "Lutein": { s: { t: "Nothing you'll notice quickly.", status: "claimed" }, l: { t: "Builds up in the eye's macula over months. Eye-health trials used 10 mg a day.", status: "proven" } },
+    "Astaxanthin": { s: { t: "Nothing noticeable.", status: "claimed" }, l: { t: "Small studies on eye fatigue.", status: "claimed" } },
+    "Zeaxanthin": { s: { t: "Nothing noticeable.", status: "claimed" }, l: { t: "Builds up in the macula alongside lutein.", status: "proven" } },
+    "Beta-carotene (as vitamin A)": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Your body turns it into vitamin A as needed, so you get only what you require.", status: "proven" } },
+    "Vitamin A (retinol)": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps your eyes and immune system work. Only a problem in excess.", status: "proven" } },
+    "Vitamin C": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Supports the immune system. No extra energy if your diet already covers it.", status: "proven" } },
+    "Vitamin D3": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and immune system. Often low in winter.", status: "proven" } },
+    "Vitamin E": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Protects cells from oxidative damage.", status: "proven" } },
+    "Vitamin B1": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Turns carbs into energy.", status: "proven" } },
+    "Vitamin B2": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps the body turn food into energy.", status: "proven" } },
+    "Niacin (nicotinamide)": { s: { t: "No flush with this form. You won't feel it unless you're low.", status: "proven" }, l: { t: "Helps the body turn food into energy.", status: "proven" } },
+    "Vitamin B6": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves.", status: "proven" } },
+    "Folic acid": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps make new blood cells.", status: "proven" } },
+    "Vitamin B12": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Blood and nerves. The body absorbs only a small share of high doses.", status: "proven" } },
+    "Biotin": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps energy metabolism. Skin and hair benefits show up mainly when you're deficient.", status: "proven" } },
+    "Pantothenic acid": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Helps the body turn food into energy. Mental-performance benefits are claimed, not proven.", status: "proven" } },
+    "Calcium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and teeth.", status: "proven" } },
+    "Magnesium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Muscles and nerves.", status: "proven" } },
+    "Potassium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Muscle function.", status: "proven" } },
+    "Iron": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Carries oxygen in the blood. Men rarely need extra.", status: "proven" } },
+    "Zinc": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Immune system and vision. The testosterone link only matters if you're low.", status: "proven" } },
+    "Copper": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Iron use and connective tissue.", status: "proven" } },
+    "Manganese": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Bones and energy metabolism.", status: "proven" } },
+    "Selenium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Thyroid and immune system.", status: "proven" } },
+    "Chromium": { s: { t: "You won't feel it unless you're low. Then it matters a lot.", status: "proven" }, l: { t: "Blood sugar control is claimed, and the evidence is mixed.", status: "claimed" } },
+  };
 
   // src: amount per full serving of each product. max: daily max in the same unit.
   const GROUPS = [
     { title: "Stimulant", items: [
-      { name: "Caffeine", unit: "mg", caffeine: true, max: 400, once: 200,
-        short: "More alert and focused within 30–60 minutes, lasting a few hours. Keep it under 200 mg at once.",
-        long: "Tolerance builds with daily use. Too much or too late hurts sleep." }
+      { name: "Caffeine", unit: "mg", caffeine: true, max: 400, once: 200 }
     ]},
     { title: "Sugar", items: [
-      { name: "Sugars", unit: "g", src: { mo: 55, et: 19.1 }, max: 50,
-        short: "Quick energy that can fade again within a couple of hours.",
-        long: "Sugary drinks every day are linked to weight gain and tooth decay." }
+      { name: "Sugars", unit: "g", src: { mo: 55, et: 19.1 }, max: 50 }
     ]},
     { title: "Performance", items: [
-      { name: "Creatine monohydrate", unit: "g", src: { cr: 3 }, max: 3, maxText: "Matches the 3 g daily dose EFSA assessed as safe long term",
-        short: "Nothing you’ll feel.",
-        long: "More strength and power in short, intense efforts after about four weeks of daily use." }
+      { name: "Creatine monohydrate", unit: "g", src: { cr: 3 }, max: 3, maxText: "Matches the 3 g daily dose EFSA assessed as safe long term" }
     ]},
     { title: "Amino acids", items: [
-      { name: "Taurine", unit: "mg", src: { xb: 1000, sp: 470, mo: 2000 }, max: 3000, maxLabel: "3 g observed safe level",
-        short: "No clear effect on its own.", long: "Little evidence at this dose." },
-      { name: "L-Tyrosine", unit: "mg", src: { xb: 1000 }, max: 3600,
-        short: "May help hold focus under stress or after little sleep.", long: "No clear evidence." },
-      { name: "L-Citrulline", unit: "mg", src: { sp: 1000 }, max: 24000, maxLabel: "24 g no-effect level",
-        short: "Boosts blood flow at much higher doses (6–8 g).", long: "Little to expect at this dose." },
-      { name: "Glycine", unit: "mg", src: { xb: 1000 }, max: 1800,
-        short: "No energy effect. Studied for sleep at 3 g.", long: "No clear evidence." },
-      { name: "Inositol", unit: "mg", src: { xb: 1000 }, more: ["mo"], max: 12000,
-        short: "None known.", long: "Mood studies use far higher doses." },
-      { name: "L-Threonine", unit: "mg", src: { xb: 500 },
-        short: "None known.", long: "An essential amino acid that food already covers." },
-      { name: "Acetyl-L-carnitine", unit: "mg", src: { xb: 400 }, max: 2000, maxLabel: "2 g observed safe level",
-        short: "None clear.", long: "Some evidence against mental fatigue in older adults." },
-      { name: "L-Carnitine L-tartrate", unit: "mg", src: { mo: 200 }, max: 2000,
-        short: "None clear.", long: "Studied for muscle recovery at 1–2 g, well above this dose." },
-      { name: "L-Theanine", unit: "mg", src: { xb: 100, sp: 100 },
-        short: "Calmer focus. Takes the edge off caffeine.", long: "Little evidence." },
-      { name: "Phosphatidylserine", unit: "mg", src: { sp: 200 }, max: 300,
-        short: "None clear.", long: "Small studies on stress and memory, mostly at 100–400 mg." },
-      { name: "Choline", unit: "mg", src: { xb: 164 }, max: 3500, maxLabel: "3.5 g US limit",
-        short: "None clear.", long: "Needed for nerves and the liver. Most people get enough from food." }
+      { name: "Taurine", unit: "mg", src: { xb: 1000, sp: 470, mo: 2000 }, max: 3000, maxLabel: "3 g observed safe level" },
+      { name: "L-Tyrosine", unit: "mg", src: { xb: 1000 }, max: 3600 },
+      { name: "L-Citrulline", unit: "mg", src: { sp: 1000 }, max: 24000, maxLabel: "24 g no-effect level" },
+      { name: "Glycine", unit: "mg", src: { xb: 1000 }, max: 1800 },
+      { name: "Inositol", unit: "mg", src: { xb: 1000 }, more: ["mo"], max: 12000 },
+      { name: "L-Threonine", unit: "mg", src: { xb: 500 } },
+      { name: "Acetyl-L-carnitine", unit: "mg", src: { xb: 400 }, max: 2000, maxLabel: "2 g observed safe level" },
+      { name: "L-Carnitine L-tartrate", unit: "mg", src: { mo: 200 }, max: 2000 },
+      { name: "L-Theanine", unit: "mg", src: { xb: 100, sp: 100 } },
+      { name: "Phosphatidylserine", unit: "mg", src: { sp: 200 }, max: 300 },
+      { name: "Choline", unit: "mg", src: { xb: 164 }, max: 3500, maxLabel: "3.5 g US limit" }
     ]},
     { title: "Plant extracts", items: [
-      { name: "Ashwagandha", unit: "mg", src: { xb: 200 }, flag: "No safe long-term level set by EU agencies",
-        short: "May take the edge off stress.",
-        long: "Lower stress hormone and slightly higher testosterone in 8–16 week trials. Long-term safety is debated." },
-      { name: "Sage (Cognivia)", unit: "mg", src: { sp: 400 },
-        short: "Better working memory within hours at 600 mg in one trial.", long: "The same trial saw benefits after four weeks." },
-      { name: "Lemon balm", unit: "mg", approx: true, src: { sp: 600 },
-        short: "Calmer mood in small studies.", long: "Little evidence." },
-      { name: "Rhodiola", unit: "mg", src: { xb: 100, sp: 200 }, max: 400, once: 200,
-        short: "May reduce mental fatigue under stress.", long: "Mixed evidence." },
-      { name: "Mango leaf (Zynamite)", unit: "mg", src: { sp: 200 },
-        short: "Small studies suggest sharper attention.", long: "Little evidence." },
-      { name: "Bacopa", unit: "mg", src: { xb: 150 },
-        short: "Nothing noticeable.", long: "Better memory after 8–12 weeks in several trials." },
-      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50, mo: 400 }, max: 525,
-        short: "Small, mixed effects on focus.", long: "Mixed evidence." },
-      { name: "Guarana extract", unit: "mg", src: { mo: 10 }, note: "No bar: the EMA and Health Canada doses are for whole seed, not extract, and this extract’s strength is unknown. Its caffeine counts in the caffeine bar",
-        short: "Little to feel at this dose.", long: "Naturally contains caffeine, but at 10 mg of extract the amount is small." },
-      { name: "Chokeberry (BrainBerry)", unit: "mg", src: { sp: 65 },
-        short: "Little evidence.", long: "Antioxidant polyphenols. Small studies only." }
+      { name: "Ashwagandha", unit: "mg", src: { xb: 200 }, flag: "No safe long-term level set by EU agencies" },
+      { name: "Sage (Cognivia)", unit: "mg", src: { sp: 400 } },
+      { name: "Lemon balm", unit: "mg", approx: true, src: { sp: 600 } },
+      { name: "Rhodiola", unit: "mg", src: { xb: 100, sp: 200 }, max: 400, once: 200 },
+      { name: "Mango leaf (Zynamite)", unit: "mg", src: { sp: 200 } },
+      { name: "Bacopa", unit: "mg", src: { xb: 150 } },
+      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50, mo: 400 }, max: 525 },
+      { name: "Guarana extract", unit: "mg", src: { mo: 10 }, note: "No bar: the EMA and Health Canada doses are for whole seed, not extract, and this extract’s strength is unknown. Its caffeine counts in the caffeine bar" },
+      { name: "Chokeberry (BrainBerry)", unit: "mg", src: { sp: 65 } }
     ]},
     { title: "Eyes", items: [
-      { name: "Lutein", unit: "mg", src: { sp: 7 },
-        short: "Nothing noticeable.", long: "Builds up in the eye’s macula over months. Usually studied at 10 mg." },
-      { name: "Astaxanthin", unit: "mg", src: { sp: 4 }, max: 8, maxLabel: "8 mg EU max",
-        short: "Nothing noticeable.", long: "Small studies on eye fatigue." },
-      { name: "Zeaxanthin", unit: "mg", src: { sp: 0.7 },
-        short: "Nothing noticeable.", long: "Builds up in the macula alongside lutein." }
+      { name: "Lutein", unit: "mg", src: { sp: 7 } },
+      { name: "Astaxanthin", unit: "mg", src: { sp: 4 }, max: 8, maxLabel: "8 mg EU max" },
+      { name: "Zeaxanthin", unit: "mg", src: { sp: 0.7 } }
     ]},
     { title: "Vitamins", items: [
-      { name: "Vitamin C", unit: "mg", src: { tet: 80, xb: 100, sp: 18 }, short: VIT_SHORT, long: "Supports the immune system. No extra energy if your diet covers it." },
-      { name: "Vitamin A (retinol)", unit: "µg", src: { xb: 400 }, max: 3000, short: VIT_SHORT, long: "Vision and immune system." },
-      { name: "Beta-carotene (as vitamin A)", unit: "µg", src: { tet: 800 }, max: 18000, flag: "No limit set. Smokers should avoid supplements with it", short: VIT_SHORT, long: "Converted to vitamin A as needed." },
-      { name: "Vitamin D3", unit: "µg", src: { tet: 5 }, max: 100, short: VIT_SHORT, long: "Bones and immune system. Often low in winter." },
-      { name: "Vitamin E", unit: "mg", src: { tet: 12, sp: 5.5 }, max: 300, short: VIT_SHORT, long: "Protects cells from oxidative damage." },
-      { name: "Vitamin B1", unit: "mg", src: { tet: 1.1, xb: 2, sp: 0.3 }, short: VIT_SHORT, long: "Turns carbs into energy." },
-      { name: "Vitamin B2", unit: "mg", src: { tet: 1.4, sp: 0.4, mo: 3.5 }, short: VIT_SHORT, long: "Energy metabolism." },
-      { name: "Niacin (nicotinamide)", unit: "mg", src: { tet: 16, xb: 16, sp: 4, mo: 42.5 }, max: 900, short: "No flush with this form. " + VIT_SHORT, long: "Energy metabolism." },
-      { name: "Vitamin B6", unit: "mg", src: { tet: 1.4, xb: 3, sp: 0.4, mo: 4 }, max: 12, short: VIT_SHORT, long: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves." },
-      { name: "Folic acid", unit: "µg", src: { tet: 200, xb: 200, sp: 45 }, max: 1000, short: VIT_SHORT, long: "Making new blood cells." },
-      { name: "Vitamin B12", unit: "µg", src: { tet: 2.5, xb: 5, sp: 0.6, mo: 12.5 }, short: VIT_SHORT, long: "Blood and nerves. The body absorbs only a small share of high doses." },
-      { name: "Biotin", unit: "µg", src: { tet: 50, sp: 12 }, short: VIT_SHORT, long: "Energy metabolism, skin and hair if you’re low." },
-      { name: "Pantothenic acid", unit: "mg", src: { tet: 6, sp: 1.5 }, short: VIT_SHORT, long: "Energy metabolism and mental performance." }
+      { name: "Vitamin C", unit: "mg", src: { tet: 80, xb: 100, sp: 18 } },
+      { name: "Vitamin A (retinol)", unit: "µg", src: { xb: 400 }, max: 3000 },
+      { name: "Beta-carotene (as vitamin A)", unit: "µg", src: { tet: 800 }, max: 18000, flag: "No limit set. Smokers should avoid supplements with it" },
+      { name: "Vitamin D3", unit: "µg", src: { tet: 5 }, max: 100 },
+      { name: "Vitamin E", unit: "mg", src: { tet: 12, sp: 5.5 }, max: 300 },
+      { name: "Vitamin B1", unit: "mg", src: { tet: 1.1, xb: 2, sp: 0.3 } },
+      { name: "Vitamin B2", unit: "mg", src: { tet: 1.4, sp: 0.4, mo: 3.5 } },
+      { name: "Niacin (nicotinamide)", unit: "mg", src: { tet: 16, xb: 16, sp: 4, mo: 42.5 }, max: 900 },
+      { name: "Vitamin B6", unit: "mg", src: { tet: 1.4, xb: 3, sp: 0.4, mo: 4 }, max: 12 },
+      { name: "Folic acid", unit: "µg", src: { tet: 200, xb: 200, sp: 45 }, max: 1000 },
+      { name: "Vitamin B12", unit: "µg", src: { tet: 2.5, xb: 5, sp: 0.6, mo: 12.5 } },
+      { name: "Biotin", unit: "µg", src: { tet: 50, sp: 12 } },
+      { name: "Pantothenic acid", unit: "mg", src: { tet: 6, sp: 1.5 } }
     ]},
     { title: "Minerals", items: [
-      { name: "Calcium", unit: "mg", src: { tet: 240 }, max: 2500, short: VIT_SHORT, long: "Bones and teeth." },
-      { name: "Magnesium", unit: "mg", src: { tet: 112.5 }, max: 250, maxLabel: "250 mg max from supplements", short: VIT_SHORT, long: "Muscles and nerves." },
-      { name: "Potassium", unit: "mg", src: { xb: 100 }, short: VIT_SHORT, long: "Muscle function." },
-      { name: "Iron", unit: "mg", src: { tet: 7, sp: 5 }, max: 40, short: VIT_SHORT, long: "Carries oxygen in the blood. Men rarely need extra." },
-      { name: "Zinc", unit: "mg", src: { tet: 4, sp: 3.5 }, max: 25, short: VIT_SHORT, long: "Immune system, vision and normal testosterone." },
-      { name: "Copper", unit: "mg", src: { tet: 0.5 }, max: 5, short: VIT_SHORT, long: "Iron use and connective tissue." },
-      { name: "Manganese", unit: "mg", src: { tet: 1 }, max: 8, short: VIT_SHORT, long: "Bones and energy metabolism." },
-      { name: "Selenium", unit: "µg", src: { tet: 27.5 }, max: 255, short: VIT_SHORT, long: "Thyroid and immune system." },
-      { name: "Chromium", unit: "µg", src: { tet: 20 }, short: VIT_SHORT, long: "Blood sugar control." }
+      { name: "Calcium", unit: "mg", src: { tet: 240 }, max: 2500 },
+      { name: "Magnesium", unit: "mg", src: { tet: 112.5 }, max: 250, maxLabel: "250 mg max from supplements" },
+      { name: "Potassium", unit: "mg", src: { xb: 100 } },
+      { name: "Iron", unit: "mg", src: { tet: 7, sp: 5 }, max: 40 },
+      { name: "Zinc", unit: "mg", src: { tet: 4, sp: 3.5 }, max: 25 },
+      { name: "Copper", unit: "mg", src: { tet: 0.5 }, max: 5 },
+      { name: "Manganese", unit: "mg", src: { tet: 1 }, max: 8 },
+      { name: "Selenium", unit: "µg", src: { tet: 27.5 }, max: 255 },
+      { name: "Chromium", unit: "µg", src: { tet: 20 } }
     ]}
   ];
 
@@ -565,8 +592,14 @@ footer p + p { margin-top: .6rem; }
   ingRoot.appendChild(lists.bar);
   moreRoot.appendChild(lists.more);
 
+  const fxBlock = (label, o) => `<div class="fx">
+            <div class="fx-head"><b>${label}</b><i class="tag ${o.status}">${o.status === "proven" ? "Proven" : "Claimed"}</i></div>
+            <p>${o.t}</p>
+          </div>`;
+
   GROUPS.forEach(g => {
     g.items.forEach(item => {
+      const fx = EFFECTS[item.name] || { s: { t: "", status: "claimed" }, l: { t: "", status: "claimed" } };
       const withBar = hasBar(item);
       const wrap = lists[withBar ? "bar" : "more"];
       const d = document.createElement("details");
@@ -578,8 +611,8 @@ footer p + p { margin-top: .6rem; }
           ${withBar ? `<span class="bar" aria-hidden="true"><i></i>${recOf(item) != null ? '<b class="tick rec"></b>' : ""}${item.max ? '<b class="tick max"></b>' : ""}</span>` : ""}
         </summary>
         <div class="effects">
-          <p><b>Short term</b>${item.short}</p>
-          <p><b>Long term</b>${item.long}</p>
+          ${fxBlock("Short term", fx.s)}
+          ${fxBlock("Long term", fx.l)}
           <p class="ref-row"><button type="button" class="ref-btn${item.flag ? " flag" : ""}" aria-haspopup="dialog">Reference</button></p>
           <span class="ing-max" hidden></span>
         </div>`;
