@@ -62,6 +62,7 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 - `GROUPS`: every ingredient with `src` = amount per full serving of each product (`xb` XBEAM, `sp` Sponser, `tet` tetesept, `cr` creatine), optional `max`, `flag`, and short/long-term effect text.
 - `REF`: daily need (EU NRV) or studied dose per ingredient, drawn as the tick.
 - `MAXTXT`: custom wording for non-standard limits.
+- Item options: `once` (single-dose limit, gives the "sip it slowly" warning), `note` (reference text for an item with no max and no recommended dose), `more` (a product adds an amount the label does not state).
 
 ## Sources behind the numbers
 
@@ -73,6 +74,34 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 - **Daily need:** EU nutrient reference values (Reg. 1169/2011); choline 400 mg is the EFSA adequate intake.
 - **Studied doses:** caffeine 75 mg (EFSA alertness claim), sage/Cognivia 600 mg (Wightman et al. 2021), bacopa 300 mg, ashwagandha 600 mg, lutein 10 mg and zeaxanthin 2 mg (AREDS2), citrulline 6 g.
 - **Ashwagandha:** flagged because EU agencies (BfR 2024) haven't set a safe long-term level. Samuel knows and accepts this; keep the flag but don't add more warnings.
+
+## Source ladder for recommended doses and maxes
+
+Every ingredient should have a green mark (recommended dose), a red mark (max), or both. Use sources in this order and stop at the first that gives a usable number:
+
+1. **EU:** EFSA (UL opinions, health-claim doses, NRVs), EMA/HMPC herbal monographs, EU novel-food authorisations.
+2. **Other authorities:** Health Canada (NNHPD monographs, the most consistent single source, covering all the amino acids here) and WHO/FAO.
+3. **Human trials:** the dose used in the main trials, marked "Studies use".
+
+Numbers added this way (`REF` for green, `max` + `MAXTXT` for red; each reference line names its source):
+
+| Ingredient | Green | Red | Source |
+|---|---|---|---|
+| L-Tyrosine | none | 3.6 g | Health Canada Workout Supplements monograph (its single L-Tyrosine monograph also allows 10–20 g for occasional use, and the two disagree) |
+| Glycine | none | 1.8 g | Health Canada Workout Supplements monograph |
+| Inositol | none | 650 mg | Health Canada multivitamin monograph (complementary ingredient cap). Trials saw side effects only at 12 g, so this cap is conservative, and both versions show it as over the max |
+| L-Threonine | about 1.05 g | none | WHO/FAO 15 mg per kg a day at an assumed 70 kg. Health Canada caps free threonine at 301 mg, which is below the dietary need, so it is not used as the red mark and only appears in the text |
+| L-Theanine | 200 mg | none | Health Canada 200–250 mg a day |
+| Phosphatidylserine | none (same as max) | 300 mg | Health Canada, soy PS recommended maximum daily intake |
+| Beta-carotene | none | 18 mg | Health Canada. EFSA 2024 sets no UL, smokers should avoid supplements with it |
+| Rhodiola | 144 mg | 400 mg (200 mg at once) | EMA/HMPC monograph, dry extract DER 1.5–5:1. Hardcore is above the single-dose limit and gets the "!" |
+| Ginseng | 196 mg | 525 mg | EMA/HMPC monograph, dry extract DER 3–7:1, ethanol 50–60%. Health Canada has 200–600 mg |
+| Lemon balm | 600 mg | none | Kennedy 2002 trial, standardised extract. EMA and Health Canada give doses per gram of dried herb, which cannot be compared with mg of extract without the extract ratio |
+| Mango leaf (Zynamite) | 300 mg | none | Single-dose trial (sponsor-funded). No official figure exists |
+| Chokeberry (BrainBerry) | 90 mg | none | 24-week trial (sponsor-linked). No official figure exists |
+| Guarana | no bar | no bar | EMA (450 mg seed powder) and Health Canada (1–3 g seed) are for whole seed and the extract strength is unknown. Its caffeine is in the caffeine bar. A `note` explains this in the dropdown |
+
+Not read by the research: the EU Novel Food Catalogue entries, TGA, UK FSA/EVM, BfR and JECFA for most of these. Add a `max` / `REF` entry for any ingredient to move it into the bars.
 
 ## Keep in mind
 

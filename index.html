@@ -339,7 +339,7 @@ footer p + p { margin-top: .6rem; }
   // src: amount per full serving of each product. max: daily max in the same unit.
   const GROUPS = [
     { title: "Stimulant", items: [
-      { name: "Caffeine", unit: "mg", caffeine: true, max: 400,
+      { name: "Caffeine", unit: "mg", caffeine: true, max: 400, once: 200,
         short: "More alert and focused within 30–60 minutes, lasting a few hours. Keep it under 200 mg at once.",
         long: "Tolerance builds with daily use. Too much or too late hurts sleep." }
     ]},
@@ -356,13 +356,13 @@ footer p + p { margin-top: .6rem; }
     { title: "Amino acids", items: [
       { name: "Taurine", unit: "mg", src: { xb: 1000, sp: 470, mo: 2000 }, max: 3000, maxLabel: "3 g observed safe level",
         short: "No clear effect on its own.", long: "Little evidence at this dose." },
-      { name: "L-Tyrosine", unit: "mg", src: { xb: 1000 },
+      { name: "L-Tyrosine", unit: "mg", src: { xb: 1000 }, max: 3600,
         short: "May help hold focus under stress or after little sleep.", long: "No clear evidence." },
       { name: "L-Citrulline", unit: "mg", src: { sp: 1000 }, max: 24000, maxLabel: "24 g no-effect level",
         short: "Boosts blood flow at much higher doses (6–8 g).", long: "Little to expect at this dose." },
-      { name: "Glycine", unit: "mg", src: { xb: 1000 },
+      { name: "Glycine", unit: "mg", src: { xb: 1000 }, max: 1800,
         short: "No energy effect. Studied for sleep at 3 g.", long: "No clear evidence." },
-      { name: "Inositol", unit: "mg", src: { xb: 1000 }, more: ["mo"],
+      { name: "Inositol", unit: "mg", src: { xb: 1000 }, more: ["mo"], max: 650,
         short: "None known.", long: "Mood studies use far higher doses." },
       { name: "L-Threonine", unit: "mg", src: { xb: 500 },
         short: "None known.", long: "An essential amino acid that food already covers." },
@@ -372,7 +372,7 @@ footer p + p { margin-top: .6rem; }
         short: "None clear.", long: "Studied for muscle recovery at 1–2 g, well above this dose." },
       { name: "L-Theanine", unit: "mg", src: { xb: 100, sp: 100 },
         short: "Calmer focus. Takes the edge off caffeine.", long: "Little evidence." },
-      { name: "Phosphatidylserine", unit: "mg", src: { sp: 200 },
+      { name: "Phosphatidylserine", unit: "mg", src: { sp: 200 }, max: 300,
         short: "None clear.", long: "Small studies on stress and memory, mostly at 100–400 mg." },
       { name: "Choline", unit: "mg", src: { xb: 164 }, max: 3500, maxLabel: "3.5 g US limit",
         short: "None clear.", long: "Needed for nerves and the liver. Most people get enough from food." }
@@ -385,15 +385,15 @@ footer p + p { margin-top: .6rem; }
         short: "Better working memory within hours at 600 mg in one trial.", long: "The same trial saw benefits after four weeks." },
       { name: "Lemon balm", unit: "mg", approx: true, src: { sp: 600 },
         short: "Calmer mood in small studies.", long: "Little evidence." },
-      { name: "Rhodiola", unit: "mg", src: { xb: 100, sp: 200 },
+      { name: "Rhodiola", unit: "mg", src: { xb: 100, sp: 200 }, max: 400, once: 200,
         short: "May reduce mental fatigue under stress.", long: "Mixed evidence." },
       { name: "Mango leaf (Zynamite)", unit: "mg", src: { sp: 200 },
         short: "Small studies suggest sharper attention.", long: "Little evidence." },
       { name: "Bacopa", unit: "mg", src: { xb: 150 },
         short: "Nothing noticeable.", long: "Better memory after 8–12 weeks in several trials." },
-      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50, mo: 400 },
+      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50, mo: 400 }, max: 525,
         short: "Small, mixed effects on focus.", long: "Mixed evidence." },
-      { name: "Guarana extract", unit: "mg", src: { mo: 10 },
+      { name: "Guarana extract", unit: "mg", src: { mo: 10 }, note: "No bar: the EMA and Health Canada doses are for whole seed, not extract, and this extract’s strength is unknown. Its caffeine counts in the caffeine bar",
         short: "Little to feel at this dose.", long: "Naturally contains caffeine, but at 10 mg of extract the amount is small." },
       { name: "Chokeberry (BrainBerry)", unit: "mg", src: { sp: 65 },
         short: "Little evidence.", long: "Antioxidant polyphenols. Small studies only." }
@@ -409,7 +409,7 @@ footer p + p { margin-top: .6rem; }
     { title: "Vitamins", items: [
       { name: "Vitamin C", unit: "mg", src: { tet: 80, xb: 100, sp: 18 }, short: VIT_SHORT, long: "Supports the immune system. No extra energy if your diet covers it." },
       { name: "Vitamin A (retinol)", unit: "µg", src: { xb: 400 }, max: 3000, short: VIT_SHORT, long: "Vision and immune system." },
-      { name: "Beta-carotene (as vitamin A)", unit: "µg", src: { tet: 800 }, flag: "No limit set. Smokers should avoid supplements with it", short: VIT_SHORT, long: "Converted to vitamin A as needed." },
+      { name: "Beta-carotene (as vitamin A)", unit: "µg", src: { tet: 800 }, max: 18000, flag: "No limit set. Smokers should avoid supplements with it", short: VIT_SHORT, long: "Converted to vitamin A as needed." },
       { name: "Vitamin D3", unit: "µg", src: { tet: 5 }, max: 100, short: VIT_SHORT, long: "Bones and immune system. Often low in winter." },
       { name: "Vitamin E", unit: "mg", src: { tet: 12, sp: 5.5 }, max: 300, short: VIT_SHORT, long: "Protects cells from oxidative damage." },
       { name: "Vitamin B1", unit: "mg", src: { tet: 1.1, xb: 2, sp: 0.3 }, short: VIT_SHORT, long: "Turns carbs into energy." },
@@ -466,7 +466,15 @@ footer p + p { margin-top: .6rem; }
     "Copper": { v: 1 },
     "Manganese": { v: 2 },
     "Selenium": { v: 55 },
-    "Chromium": { v: 40 }
+    "Chromium": { v: 40 },
+    // Added from outside the EU: Health Canada, WHO/FAO and the EMA herbal monographs, then trial doses
+    "L-Theanine": { v: 200, note: "Health Canada: 200–250 mg a day" },
+    "L-Threonine": { v: 1050, note: "WHO/FAO need: 15 mg per kg a day, about 1 g at 70 kg, food counts. Health Canada caps free threonine at 301 mg in workout products" },
+    "Lemon balm": { v: 600, type: "studied" },
+    "Rhodiola": { v: 144, note: "EMA: 144 mg of extract a day" },
+    "Mango leaf (Zynamite)": { v: 300, type: "studied" },
+    "Ginseng": { v: 196, note: "EMA: 196 mg of a 3–7:1 extract a day" },
+    "Chokeberry (BrainBerry)": { v: 90, type: "studied" }
   };
   const MAXTXT = {
     "Caffeine": "Max 400 mg a day, 200 mg at once",
@@ -478,7 +486,14 @@ footer p + p { margin-top: .6rem; }
     "Astaxanthin": "EU max 8 mg",
     "Magnesium": "Max 250 mg from supplements",
     "Sugars": "WHO advice: under 50 g of free sugars a day",
-    "L-Carnitine L-tartrate": "Safe up to 2 g of L-carnitine"
+    "L-Carnitine L-tartrate": "Safe up to 2 g of L-carnitine",
+    "L-Tyrosine": "Health Canada max 3.6 g a day",
+    "Glycine": "Health Canada max 1.8 g a day",
+    "Inositol": "Health Canada caps it at 650 mg a day in multivitamins. Trials saw side effects only at 12 g",
+    "Phosphatidylserine": "Health Canada: 300 mg a day is both the studied dose and the max (soy)",
+    "Rhodiola": "EMA max 400 mg of extract a day, 200 mg at once",
+    "Ginseng": "EMA max 525 mg a day",
+    "Beta-carotene (as vitamin A)": "Health Canada max 18 mg a day. EFSA sets no limit, and smokers should avoid supplements with it"
   };
 
   const fmtNum = v => {
@@ -565,7 +580,7 @@ footer p + p { margin-top: .6rem; }
 
       let warn = null;
       if (item.max && v > item.max) warn = "Over the max in this version";
-      else if (item.caffeine && cLo > 200) warn = "Above the 200 mg single-dose limit, so sip it slowly";
+      else if (item.once && (item.caffeine ? cLo : v) > item.once) warn = `Above the ${fmt(item.once, item.unit)} single-dose limit, so sip it slowly`;
       name.classList.toggle("flagged", Boolean(item.flag || warn));
       limits.classList.toggle("flag", Boolean(item.flag || warn));
       if (barEl) barEl.classList.toggle("over", Boolean(item.max && v > item.max));
@@ -573,13 +588,14 @@ footer p + p { margin-top: .6rem; }
       const parts = [];
       if (warn) parts.push(warn);
       if (ref) parts.push(ref.note || (ref.type === "studied" ? "Studies use " : "Daily need ") + fmt(ref.v, item.unit));
-      parts.push(item.max ? (MAXTXT[item.name] || "Max " + fmt(item.max, item.unit)) : (item.flag || "No EU max set"));
+      parts.push(item.max ? (MAXTXT[item.name] || "Max " + fmt(item.max, item.unit)) : (item.note || item.flag || "No EU max set"));
       if (plus) parts.push("Plus an amount the Monster label doesn’t state");
       max.textContent = parts.join(". ");
 
       if (bar) bar.style.width = barPos(v, recOf(item), item.max).toFixed(1) + "%";
     });
     document.querySelectorAll(".group").forEach(g => { g.hidden = [...g.querySelectorAll("details.ing")].every(x => x.hidden); });
+    document.getElementById("more-h").closest("section").hidden = [...moreRoot.querySelectorAll(".group")].every(g => g.hidden);
   }
 
   document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => render(b.dataset.mode)));
