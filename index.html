@@ -289,7 +289,7 @@ footer p + p { margin-top: .6rem; }
     <h2 id="bottle-h" class="display">In the bottle</h2>
     <ul class="recipe" id="recipe"></ul>
     <p class="summary" id="summary"></p>
-    <p class="howto" id="howto">Drop the tablet in first and wait until it stops fizzing before you close the cap. Then add the powders and sip over one to two hours.</p>
+    <p class="howto" id="howto"></p>
   </section>
 
   <section aria-labelledby="ing-h">
@@ -309,9 +309,10 @@ footer p + p { margin-top: .6rem; }
 (function () {
   // Products and how much of each goes in, per mode (1 = one full label serving)
   const MODES = {
-    // mt = mate tea bag, mo = one 500 ml can of Monster Energy Original (with sugar)
-    everyday: { xb: 1, sp: 1/3, tet: 1, cr: 1, mt: 1, caff: [170, 210], plus: "mate",    cost: "CHF 2.70" },
-    hardcore: { xb: 1, sp: 1,   tet: 1, cr: 1, mo: 1, caff: [310, 310], plus: "Monster", cost: "CHF 5.30" }
+    // et = one 330 ml can of El Tony Mate Classic, mo = one 500 ml can of Monster Energy Original (with sugar)
+    // water = ml of water that tops the bottle up to 600 ml
+    everyday: { xb: 1, sp: 1/3, tet: 1, cr: 1, et: 1, water: 270, caff: [226, 226], plus: "El Tony", cost: "CHF 2.70" },
+    hardcore: { xb: 1, sp: 1,   tet: 1, cr: 1, mo: 1, water: 100, caff: [310, 310], plus: "Monster", cost: "CHF 5.30" }
   };
 
   const RECIPE = [
@@ -319,9 +320,9 @@ footer p + p { margin-top: .6rem; }
     { key: "sp",  qty: m => m.sp === 1 ? "15 g" : "5 g", what: "Sponser Mental Focus", note: m => m.sp === 1 ? "3 heaped scoops" : "1 heaped scoop" },
     { key: "tet", qty: m => "1",    what: "tetesept A-Z Complex", note: "fizzy tablet" },
     { key: "cr",  qty: m => "3 g",  what: "QNT Creatine Monohydrate", note: "1 scoop" },
-    { key: "mt",  modes: ["everyday"], qty: m => "1",      what: "Mate tea bag", note: "brewed in the bottle" },
+    { key: "et",  modes: ["everyday"], qty: m => "330 ml", what: "El Tony Mate", note: "the classic can" },
     { key: "mo",  modes: ["hardcore"], qty: m => "500 ml", what: "Monster Energy Original", note: "the green can, with sugar" },
-    { key: "w",   qty: m => m.mo ? "500 ml" : "1 L", what: "Water", note: m => m.mo ? "tops it up to 1 L" : "" }
+    { key: "w",   qty: m => m.water + " ml", what: "Water", note: "tops it up to 600 ml" }
   ];
 
   const VIT_SHORT = "Nothing you’ll feel unless you’re low.";
@@ -334,7 +335,7 @@ footer p + p { margin-top: .6rem; }
         long: "Tolerance builds with daily use. Too much or too late hurts sleep." }
     ]},
     { title: "Sugar", items: [
-      { name: "Sugars", unit: "g", src: { mo: 55 }, max: 50,
+      { name: "Sugars", unit: "g", src: { mo: 55, et: 19.1 }, max: 50,
         short: "Quick energy that can fade again within a couple of hours.",
         long: "Sugary drinks every day are linked to weight gain and tooth decay." }
     ]},
@@ -522,9 +523,8 @@ footer p + p { margin-top: .6rem; }
     const caffText = cLo === cHi ? `${cLo} mg` : `${cLo}–${cHi} mg`;
     document.getElementById("summary").innerHTML =
       `<b>${caffText}</b> caffeine, about <b>${m.cost}</b> a bottle plus the ${m.plus}, and one bottle a day at most.`;
-    document.getElementById("howto").textContent = modeKey === "hardcore"
-      ? "Drop the tablet in the water first and wait until it stops fizzing. Stir in the powders, then pour the Monster in last and slowly, since it foams. Close the cap, don’t shake, and sip over one to two hours."
-      : "Drop the tablet in first and wait until it stops fizzing before you close the cap. Then add the powders and sip over one to two hours.";
+    document.getElementById("howto").textContent =
+      `Drop the tablet in the water first and wait until it stops fizzing. Stir in the powders, then pour the ${m.plus} in last and slowly, since it foams. Close the cap, don’t shake, and sip over one to two hours.`;
 
     rows.forEach(({ item, d, name, limits, amt, barEl, bar, tick, max }) => {
       const ref = REF[item.name];
