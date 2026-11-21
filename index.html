@@ -112,6 +112,7 @@ a { color: inherit; }
 .mark h1 span { display: block; }
 /* Phones: FOGGY DUDE on one line, ENERGY on the next */
 @media (max-width: 560px) {
+  .hero { justify-content: flex-start; padding-top: calc(env(safe-area-inset-top, 0px) + 2.5rem); }
   .mark h1 { font-size: 19vw; }
   .mark h1 span { display: inline; }
   .mark h1 .a::after { content: " "; }
