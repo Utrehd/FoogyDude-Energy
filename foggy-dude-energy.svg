@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <title>Foggy Dude Energy</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#13203A"/>
+      <stop offset="1" stop-color="#070C17"/>
+    </linearGradient>
+    <radialGradient id="backlight" cx="1000" cy="230" r="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#96B2DE" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#96B2DE" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="fogA" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".0028 .0068" numOctaves="5" seed="2"/>
+      <feColorMatrix values="0 0 0 0 .9  0 0 0 0 .94  0 0 0 0 1  2.3 0 0 0 -.86"/>
+    </filter>
+    <filter id="fogB" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency=".0022 .009" numOctaves="5" seed="11"/>
+      <feColorMatrix values="0 0 0 0 .93  0 0 0 0 .96  0 0 0 0 1  2.6 0 0 0 -.9"/>
+    </filter>
+    <linearGradient id="lowFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset=".35" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#fff"/>
+    </linearGradient>
+    <mask id="low"><rect width="1200" height="630" fill="url(#lowFade)"/></mask>
+    <filter id="glow" x="-20%" y="-60%" width="140%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-80%" width="160%" height="260%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#sky)"/>
+  <rect width="1200" height="630" fill="url(#backlight)"/>
+  <rect width="1200" height="630" filter="url(#fogA)" opacity=".7"/>
+
+  <!-- The Foggy Dude -->
+  <g transform="translate(800 60)">
+    <path fill="#03060C" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600H384C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120Z"/>
+    <path fill="none" stroke="#B4CDF0" stroke-opacity=".45" stroke-width="2.5" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600M384 600C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120"/>
+    <path fill="#000" d="M200 196C154 196 134 236 136 282C138 328 164 360 200 366C236 360 262 328 264 282C266 236 246 196 200 196Z"/>
+    <path fill="#FF3D6E" filter="url(#soft)" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z">
+      <animate attributeName="opacity" values=".55;1;.7;.55" keyTimes="0;.12;.3;1" dur="2.4s" repeatCount="indefinite"/>
+    </path>
+    <path fill="#FF3D6E" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z"/>
+  </g>
+
+  <rect width="1200" height="630" filter="url(#fogB)" mask="url(#low)"/>
+
+  <!-- Wordmark -->
+  <g font-family="'Big Shoulders Display', 'Anton', 'Bebas Neue', 'Oswald', Impact, 'Arial Narrow', sans-serif" font-weight="900" fill="#EAF0F8">
+    <text x="64" y="200" font-size="180" letter-spacing="2">FOGGY</text>
+    <text x="64" y="375" font-size="180" letter-spacing="2">DUDE</text>
+    <text x="66" y="550" font-size="180" letter-spacing="2" fill="none" stroke="#EAF0F8" stroke-width="2.5">ENERGY</text>
+  </g>
+
+  <!-- Heartbeat running into the shades -->
+  <path d="M0 340 H440 L466 340 L482 312 L498 340 L520 340 L540 200 L564 450 L586 340 L606 340 L634 306 L662 340 H955"
+        fill="none" stroke="#FF3D6E" stroke-opacity=".25" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M0 340 H440 L466 340 L482 312 L498 340 L520 340 L540 200 L564 450 L586 340 L606 340 L634 306 L662 340 H955"
+        fill="none" stroke="#FF3D6E" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"
+        stroke-dasharray="240 1800" stroke-dashoffset="2040" filter="url(#glow)">
+    <animate attributeName="stroke-dashoffset" from="2040" to="0" dur="2.4s" repeatCount="indefinite"/>
+  </path>
+
+  <text x="1136" y="64" text-anchor="end" font-family="'Fragment Mono', ui-monospace, Menlo, Consolas, monospace" font-size="21" fill="#EAF0F8" letter-spacing="1" stroke="#070C17" stroke-opacity=".55" stroke-width="6" stroke-linejoin="round" paint-order="stroke">CLEARS THE FOG · EVERY DOSE ON THE LABEL</text>
+</svg>

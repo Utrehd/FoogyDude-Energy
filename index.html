@@ -3,24 +3,37 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>UTREHD Energy</title>
-<meta name="description" content="A home-mixed energy and vitamin drink. Every dose on the label, checked against EU daily limits.">
-<meta property="og:title" content="UTREHD Energy">
-<meta property="og:description" content="Min-maxed. Every dose on the label.">
-<meta property="og:image" content="https://utrehd.github.io/FoogyDude-Energy/utrehd-energy.png">
+<title>Foggy Dude Energy</title>
+<meta name="description" content="Foggy Dude Energy: a home-mixed energy and vitamin drink that clears the fog. Every dose on the label, checked against EU daily limits.">
+<meta name="theme-color" content="#0B1322">
+<meta property="og:title" content="Foggy Dude Energy">
+<meta property="og:description" content="Clears the fog. Every dose on the label.">
+<meta property="og:image" content="https://utrehd.github.io/FoogyDude-Energy/foggy-dude-energy.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #EEF1F5;
-  --ink: #14213A;
-  --muted: #5B6B82;
-  --track: #CBD3DE;
+  --bg: #E9EDF2;
+  --ink: #111B2E;
+  --muted: #56657B;
+  --track: #C3CCD8;
   --pulse: #E8174F;
   --warn: #B4400C;
   --beat: 2.4s;
+  /* Fog scene */
+  --sky1: #CBD3DE;
+  --sky2: #EEF1F5;
+  --glow: rgba(255, 255, 255, .95);
+  --shade: #1A2438;
+  --void: #05080F;
+  --rim: rgba(255, 255, 255, .7);
+  --fog-strength: .9;
+  --dude-op: .92;
+  --mono: "Fragment Mono", "Suisse Int'l Mono", "ABC Diatype Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --display: "Big Shoulders Display", "Anton", "Bebas Neue", "Oswald", Impact, "Arial Narrow", sans-serif;
   color-scheme: light;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
@@ -28,18 +41,30 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0F1A2E;
-    --ink: #E9EEF6;
-    --muted: #8C9AB0;
+    --bg: #0B1322;
+    --ink: #EAF0F8;
+    --muted: #9AA9BF;
     --track: #24324A;
     --pulse: #FF3D6E;
     --warn: #FB923C;
+    --sky1: #13203A;
+    --sky2: #070C17;
+    --glow: rgba(150, 178, 222, .34);
+    --shade: #03060C;
+    --void: #000;
+    --rim: rgba(180, 205, 240, .45);
+    --fog-strength: 1;
+    --dude-op: 1;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0F1A2E; --ink: #E9EEF6; --muted: #8C9AB0; --track: #24324A;
-  --pulse: #FF3D6E; --warn: #FB923C; color-scheme: dark;
+  --bg: #0B1322; --ink: #EAF0F8; --muted: #9AA9BF; --track: #24324A;
+  --pulse: #FF3D6E; --warn: #FB923C;
+  --sky1: #13203A; --sky2: #070C17; --glow: rgba(150, 178, 222, .34);
+  --shade: #03060C; --void: #000; --rim: rgba(180, 205, 240, .45);
+  --fog-strength: 1; --dude-op: 1;
+  color-scheme: dark;
 }
 body[data-mode="hardcore"] { --pulse: #F0441B; --beat: 1s; }
 @media (prefers-color-scheme: dark) {
@@ -47,33 +72,92 @@ body[data-mode="hardcore"] { --pulse: #F0441B; --beat: 1s; }
 }
 
 *, *::before, *::after { box-sizing: inherit; }
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); background: var(--bg); overflow-x: clip; }
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 400 1.0625rem/1.55 "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font: 400 .95rem/1.65 var(--mono);
+  letter-spacing: -.01em;
   -webkit-font-smoothing: antialiased;
+  font-synthesis: none;
+  overflow-x: hidden;
   transition: background-color .3s;
 }
-.wrap { max-width: 68rem; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
-.display { font-family: "Big Shoulders Display", "Anton", "Bebas Neue", "Oswald", Impact, "Arial Narrow", sans-serif; font-weight: 900; line-height: .86; letter-spacing: .01em; }
+.wrap { position: relative; z-index: 1; text-shadow: 0 0 14px var(--bg), 0 0 3px var(--bg); max-width: 68rem; margin: 0 auto; padding: 0 clamp(1.25rem, 5vw, 3rem); }
+.display { font-family: var(--display); font-weight: 900; line-height: .86; letter-spacing: .01em; }
 p { margin: 0; }
 a { color: inherit; }
 :focus-visible { outline: 2px solid var(--pulse); outline-offset: 4px; }
 
+/* Fog scene: fixed layers behind the page, moved by the script at the bottom */
+.scene { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; --clear: 0; }
+.sky {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(55vmax 55vmax at 76% 34%, var(--glow), transparent 62%),
+    linear-gradient(180deg, var(--sky1), var(--sky2));
+}
+.fog { position: absolute; inset: 0; }
+.fog > div {
+  position: absolute; left: -1200px; top: -700px;
+  width: calc(100% + 1200px); height: calc(100% + 1400px);
+  background-repeat: repeat; background-size: 1200px 700px;
+  will-change: transform;
+}
+.f1 { opacity: calc((.75 - var(--clear) * .45) * var(--fog-strength)); }
+.f1 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0017 .0043' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .88 0 0 0 0 .92 0 0 0 0 1 2.1 0 0 0 -.78'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
+.f2 {
+  opacity: calc((.8 - var(--clear) * .6) * var(--fog-strength));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 15%, #000 65%);
+          mask-image: linear-gradient(to bottom, transparent 15%, #000 65%);
+}
+.f2 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0025 .0062' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .94 0 0 0 0 1 2.4 0 0 0 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
+.f3 {
+  opacity: calc((.9 - var(--clear) * .75) * var(--fog-strength));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 45%, #000 92%);
+          mask-image: linear-gradient(to bottom, transparent 45%, #000 92%);
+}
+.f3 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .0085' numOctaves='5' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .93 0 0 0 0 .96 0 0 0 0 1 2.6 0 0 0 -.92'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
+
+/* The Foggy Dude */
+.dude {
+  position: absolute; bottom: -2vh; right: max(-6vw, calc(50vw - 46rem));
+  height: min(96vh, 1000px); width: auto; aspect-ratio: 2 / 3;
+  opacity: calc(var(--dude-op) * (1 - var(--clear) * .75));
+  will-change: transform;
+}
+.dude .body { fill: var(--shade); }
+.dude .rim { fill: none; stroke: var(--rim); stroke-width: 2.5; }
+.dude .face { fill: var(--void); }
+.dude .shades, .dude .shades-glow { fill: var(--pulse); transition: fill .4s; }
+.dude .shades-glow { filter: blur(9px); animation: glow var(--beat) ease-in-out infinite; }
+@keyframes glow { 0%, 100% { opacity: .55; } 12% { opacity: 1; } 30% { opacity: .7; } }
+@media (max-width: 760px) {
+  .dude { height: 64vh; right: -28vw; bottom: -10vh; }
+  .dude .shades-glow { display: none; }
+  .dude .shades { opacity: .55; }
+  :root { --dude-op: .22; }
+}
+@media (max-width: 760px) and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --dude-op: .5; }
+}
+@media (max-width: 760px) { :root[data-theme="dark"] { --dude-op: .5; } }
+
 /* Hero */
-.hero { padding: clamp(2.5rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem); }
+.hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: clamp(2.5rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem); }
+.kicker { margin-bottom: clamp(1rem, 3vh, 1.75rem); color: var(--pulse); font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; transition: color .4s; }
 .mark { position: relative; }
-.mark h1 { margin: 0; font-size: clamp(5.2rem, 28vw, 19rem); line-height: .9; }
+.mark h1 { margin: 0; font-size: clamp(4.6rem, 25vw, 15.5rem); line-height: .88; text-shadow: 0 0 40px var(--bg); }
 .mark h1 span { display: block; }
-.mark h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.mark h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--ink); text-shadow: none; }
 .pulse { position: absolute; left: -6vw; top: 50%; transform: translateY(-50%); width: calc(100% + 12vw); height: auto; overflow: visible; pointer-events: none; }
 .pulse path { fill: none; stroke: var(--pulse); stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; transition: stroke .4s; }
 .pulse .base { opacity: .22; }
 .pulse .beat { stroke-dasharray: 140 1200; stroke-dashoffset: 140; animation: travel var(--beat) linear infinite; filter: drop-shadow(0 0 6px var(--pulse)); }
 @keyframes travel { to { stroke-dashoffset: -1000; } }
-.lede { margin-top: clamp(1.5rem, 4vh, 2.5rem); max-width: 34rem; font-size: clamp(1.15rem, 2.2vw, 1.4rem); line-height: 1.45; }
+.lede { margin-top: clamp(1.5rem, 4vh, 2.5rem); max-width: 36rem; font-size: clamp(1rem, 1.8vw, 1.2rem); line-height: 1.55; }
+.lede em { font-style: normal; color: var(--pulse); transition: color .4s; }
 
 /* Mode switch */
 .modes { display: flex; gap: clamp(1.5rem, 4vw, 3rem); margin-top: clamp(2rem, 5vh, 3rem); flex-wrap: wrap; }
@@ -82,8 +166,8 @@ a { color: inherit; }
   color: var(--muted); font: inherit; text-align: left;
   border-bottom: 3px solid transparent; transition: color .2s, border-color .2s;
 }
-.mode strong { display: block; font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 900; font-size: clamp(1.9rem, 4.5vw, 2.6rem); line-height: 1; color: inherit; }
-.mode small { font-size: .95rem; }
+.mode strong { display: block; font-family: var(--display); font-weight: 900; font-size: clamp(1.9rem, 4.5vw, 2.6rem); line-height: 1; color: inherit; }
+.mode small { font-size: .8rem; }
 .mode[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--pulse); }
 .mode:hover { color: var(--ink); }
 
@@ -92,59 +176,88 @@ section { padding: clamp(2.5rem, 7vh, 4.5rem) 0; }
 h2 { margin: 0 0 1.75rem; font-size: clamp(2.6rem, 7vw, 4.2rem); }
 .recipe { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
 .recipe li { display: grid; grid-template-columns: minmax(6.5rem, 9rem) 1fr; align-items: baseline; gap: 1rem; }
-.recipe .qty { font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1; color: var(--pulse); transition: color .4s; }
-.recipe .what { font-size: 1.05rem; }
+.recipe .qty { font-family: var(--display); font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.2rem); line-height: 1; color: var(--pulse); transition: color .4s; }
+.recipe .what { font-size: .95rem; }
 .recipe .what span { color: var(--muted); }
-.summary { margin-top: 2rem; max-width: 40rem; font-size: 1.15rem; }
-.summary b { font-weight: 600; }
+.summary { margin-top: 2rem; max-width: 40rem; font-size: 1.05rem; }
+.summary b { font-weight: 400; color: var(--pulse); transition: color .4s; }
 .howto { margin-top: .75rem; max-width: 40rem; color: var(--muted); }
 
 /* Ingredients */
-.hint { color: var(--muted); margin: -1rem 0 2.5rem; }
+.hint { color: var(--muted); margin: -1rem 0 2.5rem; max-width: 46rem; font-size: .88rem; }
 .group { margin-top: 3rem; }
-.group h3 { margin: 0 0 1rem; font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 700; font-size: 1.9rem; line-height: 1; color: var(--muted); }
+.group h3 { margin: 0 0 .5rem; font-weight: 400; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+.group h3::before { content: "// "; color: var(--pulse); transition: color .4s; }
 details.ing { padding: .9rem 0; }
 details.ing summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr auto; column-gap: 1rem; row-gap: .45rem; align-items: baseline; }
 details.ing summary::-webkit-details-marker { display: none; }
-.ing-name { font-weight: 600; font-size: 1.1rem; }
+.ing-name { font-size: 1rem; }
 .ing-name::after { content: "+"; display: inline-block; margin-left: .5rem; color: var(--muted); font-weight: 400; transition: transform .2s; }
 details[open] .ing-name::after { transform: rotate(45deg); }
-.ing-amt { font-family: "Big Shoulders Display", "Anton", Impact, sans-serif; font-weight: 700; font-size: 1.6rem; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
+.ing-amt { font-family: var(--display); font-weight: 700; font-size: 1.6rem; line-height: 1; font-variant-numeric: tabular-nums; text-align: right; }
 .bar { grid-column: 1 / -1; position: relative; height: 3px; margin: .35rem 0 .1rem; background: var(--track); border-radius: 2px; }
 .bar.open { background: linear-gradient(to right, var(--track) 55%, transparent); }
 .bar i { display: block; height: 100%; width: 0; background: var(--pulse); border-radius: 2px; transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
 .bar .tick { position: absolute; top: -6px; width: 2px; height: 15px; margin-left: -1px; background: var(--ink); border-radius: 1px; transition: left .6s cubic-bezier(.2,.8,.2,1); }
-.ing-max { grid-column: 1 / -1; font-size: .9rem; color: var(--muted); }
+.ing-max { grid-column: 1 / -1; font-size: .8rem; color: var(--muted); }
 .ing-max.flag { color: var(--warn); }
 .effects { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 2rem; padding: .9rem 0 .4rem; max-width: 52rem; }
-.effects p { font-size: .98rem; }
-.effects b { display: block; font-weight: 600; font-size: .85rem; color: var(--muted); margin-bottom: .15rem; }
+.effects p { font-size: .9rem; }
+.effects b { display: block; font-weight: 400; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
 @media (max-width: 560px) {
   .effects { grid-template-columns: 1fr; }
   .recipe li { grid-template-columns: 5.5rem 1fr; }
 }
 
-footer { padding: 3rem 0 4rem; color: var(--muted); font-size: .9rem; max-width: 46rem; }
+footer { padding: 3rem 0 4rem; color: var(--muted); font-size: .8rem; max-width: 46rem; }
+.sign { margin-top: 2rem !important; font-family: var(--display); font-weight: 900; font-size: 1.6rem; letter-spacing: .02em; color: var(--ink); }
 footer p + p { margin-top: .6rem; }
 
 @media (prefers-reduced-motion: reduce) {
   .pulse .beat { animation: none; stroke-dasharray: none; }
+  .dude .shades-glow { animation: none; }
   .bar i, .bar .tick, body { transition: none; }
 }
 </style>
 </head>
 <body data-mode="everyday">
+<div class="scene" aria-hidden="true">
+  <div class="sky"></div>
+  <div class="fog f1" data-depth=".08" data-drift="7"><div></div></div>
+  <svg class="dude" viewBox="0 0 400 600">
+    <defs>
+      <linearGradient id="dudeFade" x1="0" y1="0" x2="0" y2="1">
+        <stop offset=".55" stop-color="#fff"/>
+        <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      </linearGradient>
+      <mask id="dudeMask" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="600">
+        <rect width="400" height="600" fill="url(#dudeFade)"/>
+      </mask>
+    </defs>
+    <g mask="url(#dudeMask)">
+      <path class="body" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600H384C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120Z"/>
+      <path class="rim" d="M200 120C130 120 98 170 100 238C102 300 122 350 142 390C106 402 68 426 48 464C26 508 18 560 16 600M384 600C382 560 374 508 352 464C332 426 294 402 258 390C278 350 298 300 300 238C302 170 270 120 200 120"/>
+      <path class="face" d="M200 196C154 196 134 236 136 282C138 328 164 360 200 366C236 360 262 328 264 282C266 236 246 196 200 196Z"/>
+      <path class="shades-glow" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z"/>
+      <path class="shades" d="M148 268Q200 255 252 268L249 288Q242 305 222 304Q208 303 204 290H196Q192 303 178 304Q158 305 151 288Z"/>
+    </g>
+  </svg>
+  <div class="fog f2" data-depth=".22" data-drift="14"><div></div></div>
+  <div class="fog f3" data-depth=".45" data-drift="26"><div></div></div>
+</div>
+
 <main class="wrap">
 
   <header class="hero">
+    <p class="kicker">Home-mixed · Min-maxed</p>
     <div class="mark">
-      <h1 class="display" aria-label="UTREHD Energy"><span>UTREHD</span><span class="outline">ENERGY</span></h1>
+      <h1 class="display" aria-label="Foggy Dude Energy"><span>FOGGY</span><span>DUDE</span><span class="outline">ENERGY</span></h1>
       <svg class="pulse" viewBox="0 0 1200 200" aria-hidden="true">
         <path class="base" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
         <path class="beat" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
       </svg>
     </div>
-    <p class="lede">Caffeine, creatine, 12 vitamins, 9 minerals and a focus stack in one bottle. Every dose checked against the daily max.</p>
+    <p class="lede"><em>Clears the fog.</em> Caffeine, creatine, 12 vitamins, 9 minerals and a focus stack in one bottle. Every dose checked against the daily max.</p>
 
     <div class="modes" role="group" aria-label="Choose a version">
       <button class="mode" type="button" data-mode="everyday" aria-pressed="true"><strong>Everyday</strong><small>Steady energy for a normal day</small></button>
@@ -168,6 +281,7 @@ footer p + p { margin-top: .6rem; }
   <footer>
     <p>Daily need is the EU reference value used on food labels. Max values are EU (EFSA) upper limits for healthy adults, or the highest intake studies found safe where no EU limit exists. Most limits count food too, not just this bottle.</p>
     <p>Not for under-18s, pregnancy or breastfeeding. One bottle a day at most, and no other caffeine on top of it. This is a home-mixed drink, not medical advice.</p>
+    <p class="sign">FOGGY DUDE ENERGY</p>
   </footer>
 </main>
 
@@ -397,6 +511,49 @@ footer p + p { margin-top: .6rem; }
 
   document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => render(b.dataset.mode)));
   render("everyday");
+})();
+
+// Fog scene: drifting layers, scroll parallax, and the fog clearing as you scroll down.
+(function () {
+  const scene = document.querySelector(".scene");
+  if (!scene) return;
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const TILE_W = 1200, TILE_H = 700;
+  const layers = [...scene.querySelectorAll(".fog")].map(f => ({
+    el: f.firstElementChild, depth: +f.dataset.depth, drift: +f.dataset.drift
+  }));
+  const dude = scene.querySelector(".dude");
+  const mod = (v, m) => ((v % m) + m) % m;
+
+  let px = 0, py = 0, tx = 0, ty = 0, drift = 0, last = performance.now();
+  window.addEventListener("pointermove", e => {
+    tx = e.clientX / window.innerWidth - .5;
+    ty = e.clientY / window.innerHeight - .5;
+  }, { passive: true });
+
+  function frame(now) {
+    const dt = Math.min(64, now - last);
+    last = now;
+    const calm = still.matches;
+    const s = window.scrollY;
+    const speed = document.body.dataset.mode === "hardcore" ? 2.4 : 1;
+    if (!calm) drift += dt / 1000 * speed;
+    px += ((calm ? 0 : tx) - px) * .05;
+    py += ((calm ? 0 : ty) - py) * .05;
+
+    const clear = Math.min(1, s / (window.innerHeight * 1.1));
+    scene.style.setProperty("--clear", clear.toFixed(3));
+
+    const scroll = calm ? 0 : s;
+    layers.forEach(L => {
+      const x = mod(drift * L.drift - px * L.depth * 160, TILE_W);
+      const y = TILE_H - mod(scroll * L.depth - py * L.depth * 60, TILE_H);
+      L.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+    });
+    if (dude) dude.style.transform = `translate3d(${(-px * 18).toFixed(1)}px, ${(-scroll * .16 - py * 10).toFixed(1)}px, 0)`;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>

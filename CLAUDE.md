@@ -1,8 +1,8 @@
-# UTREHD Energy: handoff for Claude Code
+# Foggy Dude Energy: handoff for Claude Code
 
 ## What this is
 
-A one-page site for Samuel's home-mixed energy and vitamin drink, "UTREHD Energy". It was built in a claude.ai chat and needs to go into a new **private** GitHub repo on Samuel's **personal** account (not an organization).
+A one-page site for Samuel's home-mixed energy and vitamin drink, "Foggy Dude Energy" (first built as "UTREHD Energy"; Samuel is the Foggy Dude). It lives in the public repo `Utrehd/FoogyDude-Energy` and is served by GitHub Pages from `main` at https://utrehd.github.io/FoogyDude-Energy/.
 
 Live preview (claude.ai artifact, private to Samuel): https://claude.ai/artifact/SK6SvLo5wy5Qy2PLScuQyL
 
@@ -10,26 +10,23 @@ Live preview (claude.ai artifact, private to Samuel): https://claude.ai/artifact
 
 | File | Purpose |
 |---|---|
-| `index.html` | The whole site in one file (HTML, CSS, JS inline). Google Fonts: Big Shoulders Display + Hanken Grotesk, with Anton/Impact fallbacks. |
-| `utrehd-energy.svg` | Animated hero image (wordmark + heartbeat line) |
-| `utrehd-energy.png` | Static 1200×630 image for link previews (`og:image`) |
+| `index.html` | The whole site in one file (HTML, CSS, JS inline). Google Fonts: Big Shoulders Display (wordmark, headings) + Fragment Mono (everything else). |
+| `foggy-dude-energy.svg` | Animated hero image (wordmark, fog, Foggy Dude, heartbeat line) |
+| `foggy-dude-energy.jpg` | Still 1200×630 image for link previews (`og:image`), rendered from the SVG with Playwright |
+| `.nojekyll` | Makes GitHub Pages serve files as they are |
 | `README.md` | Public-facing repo readme |
 | `CLAUDE.md` | This file |
 
-## Task 1: create the private repo and push
+## Repo and Pages (done)
 
-1. Check GitHub CLI auth: `gh auth status`. If not logged in, ask Samuel to run `gh auth login`.
-2. Confirm which account is active and that it's his personal account, not a work org.
-3. From the folder with these files:
-   ```bash
-   git init -b main
-   git add .
-   git commit -m "Initial UTREHD Energy site"
-   gh repo create utrehd-energy --private --source=. --remote=origin --push
-   ```
-4. Show Samuel the repo URL.
+The repo is public and Pages deploys from `main` / root. Samuel asked for a public page, which overrides the earlier "private repo" plan.
 
-**GitHub Pages:** Pages on a private repo needs a paid GitHub plan (Pro or above). Ask Samuel before enabling Pages or making the repo public. If he wants it live: Settings → Pages → Deploy from a branch → `main` / root.
+## Fog scene
+
+- `.scene` is a fixed layer behind `main`: sky gradient with a backlight, three fog layers (`.f1`–`.f3`), and the Foggy Dude SVG between the far and near fog.
+- Fog tiles are inline SVG `feTurbulence` data URIs (1200×700, `stitchTiles`), so there are no image files to load.
+- The script at the bottom drifts the fog sideways, moves layers at different speeds on scroll (`data-depth`), nudges them with the pointer, and sets `--clear` (0 to 1 over the first screen) so the fog thins as you scroll. Hardcore mode drifts faster, and the shades glow on the `--beat`.
+- `prefers-reduced-motion` stops the drift, parallax and glow; the fog still thins on scroll.
 
 ## Task 2 (optional, ask first): restyle with his "Pulse" style
 
@@ -38,7 +35,7 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 - Find it: `gh repo list --limit 100` and search for "pulse" in repo names, CSS, or design-token files.
 - Map its tokens onto the CSS variables at the top of `index.html`: `--bg`, `--ink`, `--muted`, `--track`, `--pulse` (accent), `--warn`. Keep separate light and dark values (the `prefers-color-scheme` block and `[data-theme]` overrides), and keep the hardcore-mode accent override on `body[data-mode="hardcore"]`.
 - Swap fonts if Pulse defines them (Google Fonts `<link>` plus the font stacks).
-- Update `utrehd-energy.svg` colors to match, then re-render `utrehd-energy.png` (e.g. Playwright screenshot at 1200×630).
+- Update `foggy-dude-energy.svg` colors to match, then re-render `foggy-dude-energy.jpg` (e.g. Playwright screenshot at 1200×630).
 - Don't change the content, numbers, or layout rules.
 
 ## Design rules Samuel asked for
@@ -68,4 +65,4 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 
 - Don't add health claims beyond what's there; the effect texts are deliberately hedged.
 - Footer says: not for under-18s, pregnancy or breastfeeding; one bottle a day; not medical advice. Keep it.
-- The name is spelled "UTREHD" as Samuel wrote it. If he says otherwise, change it in `index.html` (title, `aria-label`, wordmark spans) and both images.
+- The name is "Foggy Dude Energy". If it changes, update `index.html` (title, meta, `aria-label`, wordmark spans, footer sign-off) and both images.
