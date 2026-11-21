@@ -110,6 +110,13 @@ a { color: inherit; }
 .mark { position: relative; }
 .mark h1 { margin: 0; font-size: clamp(4.6rem, 25vw, 15.5rem); line-height: .88; text-shadow: 0 0 30px var(--bg), 0 0 60px rgba(0, 0, 0, .6); }
 .mark h1 span { display: block; }
+/* Phones: FOGGY DUDE on one line, ENERGY on the next */
+@media (max-width: 560px) {
+  .mark h1 { font-size: 19vw; }
+  .mark h1 span { display: inline; }
+  .mark h1 .a::after { content: " "; }
+  .mark h1 .outline { display: block; }
+}
 .mark h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--pulse); text-shadow: none; filter: drop-shadow(0 0 6px var(--pulse)) drop-shadow(0 0 18px color-mix(in srgb, var(--pulse) 60%, transparent)); transition: -webkit-text-stroke-color .4s, filter .4s; }
 .pulse { position: absolute; left: -6vw; top: 50%; transform: translateY(-50%); width: calc(100% + 12vw); height: auto; overflow: visible; pointer-events: none; }
 .pulse path { fill: none; stroke: var(--pulse); stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; transition: stroke .4s; }
@@ -226,7 +233,7 @@ footer p + p { margin-top: .6rem; }
   <header class="hero">
     <p class="kicker">Home-mixed · Min-maxed</p>
     <div class="mark">
-      <h1 class="display" aria-label="Foggy Dude Energy"><span>FOGGY</span><span>DUDE</span><span class="outline">ENERGY</span></h1>
+      <h1 class="display" aria-label="Foggy Dude Energy"><span class="a">FOGGY</span><span class="b">DUDE</span><span class="outline">ENERGY</span></h1>
       <svg class="pulse" viewBox="0 0 1200 200" aria-hidden="true">
         <path class="base" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
         <path class="beat" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
