@@ -340,11 +340,6 @@ footer p + p { margin-top: .6rem; }
     <div id="ingredients"></div>
   </section>
 
-  <section aria-labelledby="more-h">
-    <h2 id="more-h" class="display">No bar yet</h2>
-    <p class="hint">Neither a recommended dose nor a max is set for these, so there is nothing to draw. Tap an ingredient for what’s known.</p>
-    <div id="ingredients-more"></div>
-  </section>
 
   <footer>
     <p>Not for under-18s, pregnancy or breastfeeding. One bottle a day at most, and no other caffeine on top of it. This is a home-mixed drink, not medical advice.</p>
@@ -576,7 +571,6 @@ footer p + p { margin-top: .6rem; }
   const total = (item, m) => Object.entries(item.src).reduce((s, [k, v]) => s + v * (m[k] ?? 0), 0);
 
   const ingRoot = document.getElementById("ingredients");
-  const moreRoot = document.getElementById("ingredients-more");
   const rows = [];
 
   // Anything with a recommended dose or a max gets a bar. Marks sit at the same spots on every bar:
@@ -597,7 +591,7 @@ footer p + p { margin-top: .6rem; }
   lists.bar.className = "list";
   lists.more.className = "list";
   ingRoot.appendChild(lists.bar);
-  moreRoot.appendChild(lists.more);
+  ingRoot.appendChild(lists.more);   // ingredients without a bar sit at the end of the same list
 
   // One paragraph with both sentences; the tags show which timeframes apply, each with its own status
   const fxBlock = fx => {
@@ -678,7 +672,6 @@ footer p + p { margin-top: .6rem; }
 
       if (bar) bar.style.width = barPos(v, recOf(item), item.max).toFixed(1) + "%";
     });
-    document.getElementById("more-h").closest("section").hidden = [...moreRoot.querySelectorAll("details.ing")].every(x => x.hidden);
   }
 
   // Reference modal
