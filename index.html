@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Foggy Dude Energy</title>
-<meta name="description" content="Foggy Dude Energy: a home-mixed energy and vitamin drink that clears the fog. Every dose on the label, checked against EU daily limits.">
-<meta name="theme-color" content="#0B1322">
+<meta name="description" content="Foggy Dude Energy: a home-mixed energy and vitamin drink that clears the fog. Every dose on the label.">
+<meta name="theme-color" content="#060A13">
 <meta property="og:title" content="Foggy Dude Energy">
 <meta property="og:description" content="Clears the fog. Every dose on the label.">
 <meta property="og:image" content="https://utrehd.github.io/FoogyDude-Energy/foggy-dude-energy.jpg">
@@ -16,60 +16,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #E9EDF2;
-  --ink: #111B2E;
-  --muted: #56657B;
-  --track: #C3CCD8;
-  --pulse: #E8174F;
-  --warn: #B4400C;
+  --bg: #060A13;
+  --ink: #EEF3FA;
+  --muted: #A6B3C8;
+  --track: #1E2A40;
+  --pulse: #FF2E6E;
+  --neon: #3FD4FF;
+  --warn: #FFA24C;
   --beat: 2.4s;
   /* Fog scene */
-  --sky1: #CBD3DE;
-  --sky2: #EEF1F5;
-  --glow: rgba(255, 255, 255, .95);
-  --shade: #1A2438;
-  --void: #05080F;
-  --rim: rgba(255, 255, 255, .7);
-  --fog-strength: .9;
-  --dude-op: .92;
+  --sky1: #0B1427;
+  --sky2: #03060C;
+  --glow: rgba(63, 160, 255, .26);
+  --fog-strength: 1;
+  --dude-op: 1;
   --mono: "Fragment Mono", "Suisse Int'l Mono", "ABC Diatype Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --display: "Big Shoulders Display", "Anton", "Bebas Neue", "Oswald", Impact, "Arial Narrow", sans-serif;
-  color-scheme: light;
+  color-scheme: dark;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0B1322;
-    --ink: #EAF0F8;
-    --muted: #9AA9BF;
-    --track: #24324A;
-    --pulse: #FF3D6E;
-    --warn: #FB923C;
-    --sky1: #13203A;
-    --sky2: #070C17;
-    --glow: rgba(150, 178, 222, .34);
-    --shade: #03060C;
-    --void: #000;
-    --rim: rgba(180, 205, 240, .45);
-    --fog-strength: 1;
-    --dude-op: 1;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0B1322; --ink: #EAF0F8; --muted: #9AA9BF; --track: #24324A;
-  --pulse: #FF3D6E; --warn: #FB923C;
-  --sky1: #13203A; --sky2: #070C17; --glow: rgba(150, 178, 222, .34);
-  --shade: #03060C; --void: #000; --rim: rgba(180, 205, 240, .45);
-  --fog-strength: 1; --dude-op: 1;
-  color-scheme: dark;
-}
-body[data-mode="hardcore"] { --pulse: #F0441B; --beat: 1s; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body[data-mode="hardcore"] { --pulse: #FF5A2A; }
-}
+body[data-mode="hardcore"] { --pulse: #FF5A1F; --neon: #FFB03F; --beat: 1s; }
 
 *, *::before, *::after { box-sizing: inherit; }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); background: var(--bg); overflow-x: clip; }
@@ -95,8 +63,10 @@ a { color: inherit; }
 .sky {
   position: absolute; inset: 0;
   background:
-    radial-gradient(55vmax 55vmax at 76% 34%, var(--glow), transparent 62%),
+    radial-gradient(55vmax 55vmax at 78% 32%, var(--glow), transparent 62%),
+    radial-gradient(45vmax 35vmax at 12% 92%, color-mix(in srgb, var(--pulse) 22%, transparent), transparent 70%),
     linear-gradient(180deg, var(--sky1), var(--sky2));
+  transition: background .6s;
 }
 .fog { position: absolute; inset: 0; }
 .fog > div {
@@ -105,20 +75,20 @@ a { color: inherit; }
   background-repeat: repeat; background-size: 1200px 700px;
   will-change: transform;
 }
-.f1 { opacity: calc((.75 - var(--clear) * .45) * var(--fog-strength)); }
-.f1 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0017 .0043' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .88 0 0 0 0 .92 0 0 0 0 1 2.1 0 0 0 -.78'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
+.f1 { opacity: calc((.55 - var(--clear) * .3) * var(--fog-strength)); }
+.f1 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0017 .0043' numOctaves='4' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .7 0 0 0 0 1 2.1 0 0 0 -.78'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
 .f2 {
-  opacity: calc((.8 - var(--clear) * .6) * var(--fog-strength));
+  opacity: calc((.55 - var(--clear) * .35) * var(--fog-strength));
   -webkit-mask-image: linear-gradient(to bottom, transparent 15%, #000 65%);
           mask-image: linear-gradient(to bottom, transparent 15%, #000 65%);
 }
-.f2 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0025 .0062' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9 0 0 0 0 .94 0 0 0 0 1 2.4 0 0 0 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
+.f2 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0025 .0062' numOctaves='5' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .6 0 0 0 0 .74 0 0 0 0 1 2.4 0 0 0 -.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
 .f3 {
-  opacity: calc((.9 - var(--clear) * .75) * var(--fog-strength));
-  -webkit-mask-image: linear-gradient(to bottom, transparent 45%, #000 92%);
-          mask-image: linear-gradient(to bottom, transparent 45%, #000 92%);
+  opacity: calc((.6 - var(--clear) * .4) * var(--fog-strength));
+  -webkit-mask-image: linear-gradient(to bottom, transparent 60%, #000 100%);
+          mask-image: linear-gradient(to bottom, transparent 60%, #000 100%);
 }
-.f3 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .0085' numOctaves='5' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .93 0 0 0 0 .96 0 0 0 0 1 2.6 0 0 0 -.92'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
+.f3 > div { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='700'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.002 .0085' numOctaves='5' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .66 0 0 0 0 .8 0 0 0 0 1 2.6 0 0 0 -.92'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)'/%3E%3C/svg%3E"); }
 
 /* The Foggy Dude */
 .dude {
@@ -129,39 +99,61 @@ a { color: inherit; }
 }
 @media (max-width: 760px) {
   .dude { height: 66vh; right: -30vw; bottom: -6vh; }
-  :root { --dude-op: .22; }
+  :root { --dude-op: .5; }
 }
-@media (max-width: 760px) and (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) { --dude-op: .5; }
-}
-@media (max-width: 760px) { :root[data-theme="dark"] { --dude-op: .5; } }
 
 /* Hero */
 .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: clamp(2.5rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem); }
-.kicker { margin-bottom: clamp(1rem, 3vh, 1.75rem); color: var(--pulse); font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; transition: color .4s; }
+.kicker { margin-bottom: clamp(1rem, 3vh, 1.75rem); color: var(--neon); font-size: .85rem; letter-spacing: .14em; text-transform: uppercase; text-shadow: 0 0 10px var(--neon), 0 0 2px var(--bg); transition: color .4s; }
 .mark { position: relative; }
-.mark h1 { margin: 0; font-size: clamp(4.6rem, 25vw, 15.5rem); line-height: .88; text-shadow: 0 0 40px var(--bg); }
+.mark h1 { margin: 0; font-size: clamp(4.6rem, 25vw, 15.5rem); line-height: .88; text-shadow: 0 0 30px var(--bg), 0 0 60px rgba(0, 0, 0, .6); }
 .mark h1 span { display: block; }
-.mark h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--ink); text-shadow: none; }
+.mark h1 .outline { color: transparent; -webkit-text-stroke: 2px var(--pulse); text-shadow: none; filter: drop-shadow(0 0 6px var(--pulse)) drop-shadow(0 0 18px color-mix(in srgb, var(--pulse) 60%, transparent)); transition: -webkit-text-stroke-color .4s, filter .4s; }
 .pulse { position: absolute; left: -6vw; top: 50%; transform: translateY(-50%); width: calc(100% + 12vw); height: auto; overflow: visible; pointer-events: none; }
 .pulse path { fill: none; stroke: var(--pulse); stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; transition: stroke .4s; }
 .pulse .base { opacity: .22; }
 .pulse .beat { stroke-dasharray: 140 1200; stroke-dashoffset: 140; animation: travel var(--beat) linear infinite; filter: drop-shadow(0 0 6px var(--pulse)); }
 @keyframes travel { to { stroke-dashoffset: -1000; } }
 .lede { margin-top: clamp(1.5rem, 4vh, 2.5rem); max-width: 36rem; font-size: clamp(1rem, 1.8vw, 1.2rem); line-height: 1.55; }
-.lede em { font-style: normal; color: var(--pulse); transition: color .4s; }
+.lede em { font-style: normal; color: var(--pulse); text-shadow: 0 0 12px color-mix(in srgb, var(--pulse) 70%, transparent), 0 0 2px var(--bg); transition: color .4s; }
 
-/* Mode switch */
-.modes { display: flex; gap: clamp(1.5rem, 4vw, 3rem); margin-top: clamp(2rem, 5vh, 3rem); flex-wrap: wrap; }
+/* Mode switch: two cans side by side, the chosen one turns to face you */
+.modes { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 4vw, 3rem); max-width: 40rem; margin-top: clamp(1.5rem, 4vh, 2.5rem); }
 .mode {
-  appearance: none; background: none; border: 0; padding: 0 0 .35rem; cursor: pointer;
-  color: var(--muted); font: inherit; text-align: left;
+  appearance: none; background: none; border: 0; padding: 0 0 .5rem; cursor: pointer;
+  color: var(--muted); font: inherit; text-align: left; min-width: 0;
   border-bottom: 3px solid transparent; transition: color .2s, border-color .2s;
+  -webkit-tap-highlight-color: transparent;
 }
-.mode strong { display: block; font-family: var(--display); font-weight: 900; font-size: clamp(1.9rem, 4.5vw, 2.6rem); line-height: 1; color: inherit; }
-.mode small { font-size: .8rem; }
+.can-wrap { position: relative; display: block; height: clamp(9.5rem, 30vw, 13.5rem); margin-bottom: .6rem; perspective: 700px; }
+.can-wrap::before {
+  content: ""; position: absolute; left: 50%; top: 55%; width: 120%; aspect-ratio: 1; translate: -50% -50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--can-glow) 45%, transparent), transparent);
+  opacity: 0; transition: opacity .5s; pointer-events: none;
+}
+.mode[data-mode="everyday"] { --can-glow: #FF2E6E; }
+.mode[data-mode="hardcore"] { --can-glow: #FF5A1F; }
+.can-float { display: block; height: 100%; }
+.can text { font-family: var(--display); text-shadow: none; }
+.can {
+  display: block; height: 100%; width: auto; margin-left: clamp(0rem, 3vw, 1rem); overflow: visible;
+  transform: rotateY(-28deg) rotateZ(-9deg) scale(.84); transform-origin: 50% 85%;
+  filter: saturate(.25) brightness(.6);
+  transition: transform .7s cubic-bezier(.2, .8, .2, 1), filter .5s;
+}
+.mode:hover .can { transform: rotateY(-12deg) rotateZ(-4deg) scale(.9); filter: saturate(.6) brightness(.8); }
+.mode[aria-pressed="true"] .can { transform: rotateY(0) rotateZ(0) scale(1); filter: drop-shadow(0 0 14px color-mix(in srgb, var(--can-glow) 55%, transparent)); }
+.mode[aria-pressed="true"] .can-wrap::before { opacity: 1; }
+.mode[aria-pressed="true"] .can-float { animation: bob 4.5s ease-in-out infinite; }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+.mode strong { display: block; font-family: var(--display); font-weight: 900; font-size: clamp(1.45rem, 5.2vw, 2.6rem); line-height: 1; color: inherit; }
+.mode small { display: block; margin-top: .25rem; font-size: clamp(.7rem, 2.6vw, .8rem); line-height: 1.4; }
 .mode[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--pulse); }
 .mode:hover { color: var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  .mode[aria-pressed="true"] .can-float { animation: none; }
+  .can .shine { display: none; }
+}
 
 /* Recipe */
 section { padding: clamp(2.5rem, 7vh, 4.5rem) 0; }
@@ -191,8 +183,9 @@ details[open] .ing-name::after { transform: rotate(45deg); }
 .bar.open { background: linear-gradient(to right, var(--track) 55%, transparent); }
 .bar i { display: block; height: 100%; width: 0; background: var(--pulse); border-radius: 2px; transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
 .bar .tick { position: absolute; top: -6px; width: 2px; height: 15px; margin-left: -1px; background: var(--ink); border-radius: 1px; transition: left .6s cubic-bezier(.2,.8,.2,1); }
-.ing-max { grid-column: 1 / -1; font-size: .8rem; color: var(--muted); }
-.ing-max.flag { color: var(--warn); }
+.ing-name.flagged::before { content: "! "; color: var(--warn); }
+.effects .limits { grid-column: 1 / -1; }
+.effects .limits.flag span { color: var(--warn); }
 .effects { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 2rem; padding: .9rem 0 .4rem; max-width: 52rem; }
 .effects p { font-size: .9rem; }
 .effects b { display: block; font-weight: 400; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: .2rem; }
@@ -231,11 +224,63 @@ footer p + p { margin-top: .6rem; }
         <path class="beat" pathLength="1000" d="M0 100 H520 L548 100 L566 70 L584 100 L610 100 L632 8 L660 192 L686 100 L708 100 L740 64 L772 100 H1200"/>
       </svg>
     </div>
-    <p class="lede"><em>Clears the fog.</em> Caffeine, creatine, 12 vitamins, 9 minerals and a focus stack in one bottle. Every dose checked against the daily max.</p>
+    <p class="lede"><em>Clears the fog.</em> Caffeine, creatine, 12 vitamins, 9 minerals and a focus stack in one bottle.</p>
 
     <div class="modes" role="group" aria-label="Choose a version">
-      <button class="mode" type="button" data-mode="everyday" aria-pressed="true"><strong>Everyday</strong><small>Steady energy for a normal day</small></button>
-      <button class="mode" type="button" data-mode="hardcore" aria-pressed="false"><strong>Hardcore session</strong><small>Full focus stack for long, demanding work</small></button>
+      <button class="mode" type="button" data-mode="everyday" aria-pressed="true">
+        <span class="can-wrap"><span class="can-float"><svg class="can" viewBox="0 0 120 232" aria-hidden="true">
+          <defs>
+            <linearGradient id="ed-metal" x1="0" x2="1"><stop offset="0" stop-color="#3b4a63"/><stop offset="0.16" stop-color="#aebbd0"/><stop offset="0.3" stop-color="#f4f7fb"/><stop offset="0.46" stop-color="#9fadc2"/><stop offset="0.8" stop-color="#4d5c75"/><stop offset="1" stop-color="#2a364a"/></linearGradient>
+            <linearGradient id="ed-shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".22" stop-color="#fff" stop-opacity=".22"/><stop offset=".34" stop-color="#fff" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></linearGradient>
+            <linearGradient id="ed-shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <clipPath id="ed-clip"><path d="M18 36C18 28 21 24 26 22L30 13H90L94 22C99 24 102 28 102 36V204C102 211 99 215 93 217H27C21 215 18 211 18 204Z"/></clipPath>
+            <filter id="ed-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+          </defs>
+          <ellipse cx="60" cy="224" rx="40" ry="6" fill="#000" opacity=".5"/>
+          <path d="M18 36C18 28 21 24 26 22L30 13H90L94 22C99 24 102 28 102 36V204C102 211 99 215 93 217H27C21 215 18 211 18 204Z" fill="url(#ed-metal)"/>
+          <g clip-path="url(#ed-clip)">
+            <rect x="0" y="58" width="120" height="132" fill="#0A1224"/>
+            <path d="M0 132H34L40 132L45 122L50 132L55 132L61 100L68 158L74 132L80 132L86 124L92 132H120" fill="none" stroke="#FF2E6E" stroke-width="2" stroke-opacity=".55" stroke-linejoin="round"/>
+            <path d="M8 0L-12 46H3L-5 86L22 32H6L16 0Z" transform="translate(55 78) scale(1)" fill="#FF2E6E" filter="url(#ed-blur)" opacity=".9"/>
+            <path d="M8 0L-12 46H3L-5 86L22 32H6L16 0Z" transform="translate(55 78) scale(1)" fill="#FF2E6E"/>
+            <text x="60" y="72" text-anchor="middle" font-family="var(--display)" font-weight="900" font-size="9" letter-spacing="2.4" fill="#EEF3FA" opacity=".85">FOGGY DUDE</text>
+            <text x="60" y="183" text-anchor="middle" font-family="var(--display)" font-weight="900" font-size="17" letter-spacing="1" fill="#EEF3FA">EVERYDAY</text>
+            <rect x="0" y="0" width="120" height="232" fill="url(#ed-shade)"/>
+            <rect class="shine" x="-40" y="0" width="26" height="232" fill="url(#ed-shine)" transform="skewX(-12)"><animate attributeName="x" values="-60;-60;150" keyTimes="0;.6;1" dur="5s" repeatCount="indefinite"/></rect>
+          </g>
+          <ellipse cx="60" cy="13" rx="30" ry="3.2" fill="#d9e1ec" opacity=".7"/>
+          <path d="M30 13H90" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
+          <rect x="52" y="9" width="16" height="5" rx="2.5" fill="none" stroke="#e8eef6" stroke-opacity=".7" stroke-width="1.2"/>
+        </svg></span></span>
+        <strong>Everyday</strong><small>Steady energy for a normal day</small>
+      </button>
+      <button class="mode" type="button" data-mode="hardcore" aria-pressed="false">
+        <span class="can-wrap"><span class="can-float"><svg class="can" viewBox="0 0 120 232" aria-hidden="true">
+          <defs>
+            <linearGradient id="hc-metal" x1="0" x2="1"><stop offset="0" stop-color="#050507"/><stop offset="0.16" stop-color="#34343b"/><stop offset="0.3" stop-color="#8a8a94"/><stop offset="0.46" stop-color="#2b2b31"/><stop offset="0.8" stop-color="#111114"/><stop offset="1" stop-color="#030304"/></linearGradient>
+            <linearGradient id="hc-shade" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset=".22" stop-color="#fff" stop-opacity=".22"/><stop offset=".34" stop-color="#fff" stop-opacity="0"/><stop offset=".78" stop-color="#000" stop-opacity=".2"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></linearGradient>
+            <linearGradient id="hc-shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".45"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+            <clipPath id="hc-clip"><path d="M18 36C18 28 21 24 26 22L30 13H90L94 22C99 24 102 28 102 36V204C102 211 99 215 93 217H27C21 215 18 211 18 204Z"/></clipPath>
+            <filter id="hc-blur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+          </defs>
+          <ellipse cx="60" cy="224" rx="40" ry="6" fill="#000" opacity=".5"/>
+          <path d="M18 36C18 28 21 24 26 22L30 13H90L94 22C99 24 102 28 102 36V204C102 211 99 215 93 217H27C21 215 18 211 18 204Z" fill="url(#hc-metal)"/>
+          <g clip-path="url(#hc-clip)">
+            <rect x="0" y="58" width="120" height="132" fill="#FF5A1F"/>
+            <path d="M0 132H34L40 132L45 122L50 132L55 132L61 100L68 158L74 132L80 132L86 124L92 132H120" fill="none" stroke="#FFB03F" stroke-width="2" stroke-opacity=".55" stroke-linejoin="round"/>
+            <path d="M8 0L-12 46H3L-5 86L22 32H6L16 0Z" transform="translate(43 78) scale(0.82)" fill="#FFB03F" filter="url(#hc-blur)" opacity=".9"/><path d="M8 0L-12 46H3L-5 86L22 32H6L16 0Z" transform="translate(69 78) scale(0.82)" fill="#FFB03F" filter="url(#hc-blur)" opacity=".9"/>
+            <path d="M8 0L-12 46H3L-5 86L22 32H6L16 0Z" transform="translate(43 78) scale(0.82)" fill="#0B0B0D"/><path d="M8 0L-12 46H3L-5 86L22 32H6L16 0Z" transform="translate(69 78) scale(0.82)" fill="#0B0B0D"/>
+            <text x="60" y="72" text-anchor="middle" font-family="var(--display)" font-weight="900" font-size="9" letter-spacing="2.4" fill="#0B0B0D" opacity=".85">FOGGY DUDE</text>
+            <text x="60" y="183" text-anchor="middle" font-family="var(--display)" font-weight="900" font-size="17" letter-spacing="1" fill="#0B0B0D">HARDCORE</text>
+            <rect x="0" y="0" width="120" height="232" fill="url(#hc-shade)"/>
+            <rect class="shine" x="-40" y="0" width="26" height="232" fill="url(#hc-shine)" transform="skewX(-12)"><animate attributeName="x" values="-60;-60;150" keyTimes="0;.6;1" dur="5s" repeatCount="indefinite"/></rect>
+          </g>
+          <ellipse cx="60" cy="13" rx="30" ry="3.2" fill="#d9e1ec" opacity=".7"/>
+          <path d="M30 13H90" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
+          <rect x="52" y="9" width="16" height="5" rx="2.5" fill="none" stroke="#e8eef6" stroke-opacity=".7" stroke-width="1.2"/>
+        </svg></span></span>
+        <strong>Hardcore session</strong><small>Full focus stack for long, demanding work</small>
+      </button>
     </div>
   </header>
 
@@ -248,7 +293,7 @@ footer p + p { margin-top: .6rem; }
 
   <section aria-labelledby="ing-h">
     <h2 id="ing-h" class="display">Everything in it</h2>
-    <p class="hint">Red is one bottle. The short mark is the daily need, or the dose studies used. A solid line ends at the daily max; a fading line means no max is set. Tap an ingredient for what it does.</p>
+    <p class="hint">Red is one bottle. The tick is the daily need; the line ends at the daily max. Tap an ingredient for details.</p>
     <div id="ingredients"></div>
   </section>
 
@@ -434,12 +479,12 @@ footer p + p { margin-top: .6rem; }
       d.className = "ing";
       d.innerHTML = `
         <summary>
-          <span class="ing-name">${item.name}</span>
+          <span class="ing-name${item.flag ? " flagged" : ""}">${item.name}</span>
           <span class="ing-amt"></span>
           ${item.max || REF[item.name] ? `<span class="bar${item.max ? "" : " open"}" aria-hidden="true"><i></i>${REF[item.name] ? '<b class="tick"></b>' : ""}</span>` : ""}
-          <span class="ing-max${item.flag ? " flag" : ""}"></span>
         </summary>
         <div class="effects">
+          <p class="limits${item.flag ? " flag" : ""}"><b>Reference</b><span class="ing-max"></span></p>
           <p><b>Short term</b>${item.short}</p>
           <p><b>Long term</b>${item.long}</p>
         </div>`;

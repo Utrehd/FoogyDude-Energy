@@ -22,6 +22,13 @@ Live preview (claude.ai artifact, private to Samuel): https://claude.ai/artifact
 
 The repo is public and Pages deploys from `main` / root. Samuel asked for a public page, which overrides the earlier "private repo" plan.
 
+## Look
+
+- Dark only (no light theme): deep navy background, cool blue fog, neon accents. Tokens at the top of `index.html`: `--bg`, `--ink`, `--muted`, `--track`, `--pulse` (pink accent), `--neon` (cyan, used on the kicker), `--warn`. Hardcore mode swaps `--pulse` to orange and `--neon` to amber on `body[data-mode="hardcore"]`.
+- "ENERGY" in the wordmark is a neon outline in `--pulse`.
+- The Everyday / Hardcore switch is two inline-SVG drink cans side by side (also on mobile). The chosen can turns to face you, glows and floats; the other is tilted and dimmed. Everyday: silver can, pink bolt. Hardcore: black can, orange label, double bolt.
+- Ingredient rows show only name, amount and bar. Need/max text ("Reference"), short-term and long-term effects all sit in the dropdown. A flagged ingredient gets a small "!" before its name.
+
 ## Fog scene
 
 - `.scene` is a fixed layer behind `main`: sky gradient with a backlight, three fog layers (`.f1`–`.f3`), and the Foggy Dude (`foggy-dude.webp`, 811×1100 with transparency) between the far and near fog.
@@ -35,7 +42,7 @@ The repo is public and Pages deploys from `main` / root. Samuel asked for a publ
 Samuel has a design style called "Pulse" in one of his GitHub repos. The chat couldn't access GitHub, so the current look is a stand-in.
 
 - Find it: `gh repo list --limit 100` and search for "pulse" in repo names, CSS, or design-token files.
-- Map its tokens onto the CSS variables at the top of `index.html`: `--bg`, `--ink`, `--muted`, `--track`, `--pulse` (accent), `--warn`. Keep separate light and dark values (the `prefers-color-scheme` block and `[data-theme]` overrides), and keep the hardcore-mode accent override on `body[data-mode="hardcore"]`.
+- Map its tokens onto the CSS variables at the top of `index.html`: `--bg`, `--ink`, `--muted`, `--track`, `--pulse` (accent), `--neon`, `--warn`. The site is dark only; keep the hardcore-mode override on `body[data-mode="hardcore"]`.
 - Swap fonts if Pulse defines them (Google Fonts `<link>` plus the font stacks).
 - Update `foggy-dude-energy.svg` colors to match, then re-render `foggy-dude-energy.jpg` (e.g. Playwright screenshot at 1200×630).
 - Don't change the content, numbers, or layout rules.
