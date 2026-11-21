@@ -171,9 +171,7 @@ h2 { margin: 0 0 1.75rem; font-size: clamp(2.6rem, 7vw, 4.2rem); }
 
 /* Ingredients */
 .hint { color: var(--muted); margin: -1rem 0 2.5rem; max-width: 46rem; font-size: .88rem; }
-.group { margin-top: 3rem; }
-.group h3 { margin: 0 0 .5rem; font-weight: 400; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
-.group h3::before { content: "// "; color: var(--pulse); transition: color .4s; }
+.list { margin: 0; }
 details.ing { padding: .9rem 0; }
 details.ing summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 1fr auto; column-gap: 1rem; row-gap: .45rem; align-items: baseline; }
 details.ing summary::-webkit-details-marker { display: none; }
@@ -523,18 +521,17 @@ footer p + p { margin-top: .6rem; }
     : v <= max ? 30 + (v - rec) / (max - rec) * 40
     : overMax(v, max);
 
+  // One continuous list per section, in the same order as GROUPS, with no group headings
+  const lists = { bar: document.createElement("div"), more: document.createElement("div") };
+  lists.bar.className = "list";
+  lists.more.className = "list";
+  ingRoot.appendChild(lists.bar);
+  moreRoot.appendChild(lists.more);
+
   GROUPS.forEach(g => {
-    const wraps = {};
     g.items.forEach(item => {
       const withBar = hasBar(item);
-      const kind = withBar ? "bar" : "more";
-      if (!wraps[kind]) {
-        wraps[kind] = document.createElement("div");
-        wraps[kind].className = "group";
-        wraps[kind].innerHTML = `<h3>${g.title}</h3>`;
-        (withBar ? ingRoot : moreRoot).appendChild(wraps[kind]);
-      }
-      const wrap = wraps[kind];
+      const wrap = lists[withBar ? "bar" : "more"];
       const d = document.createElement("details");
       d.className = "ing";
       d.innerHTML = `
@@ -594,8 +591,7 @@ footer p + p { margin-top: .6rem; }
 
       if (bar) bar.style.width = barPos(v, recOf(item), item.max).toFixed(1) + "%";
     });
-    document.querySelectorAll(".group").forEach(g => { g.hidden = [...g.querySelectorAll("details.ing")].every(x => x.hidden); });
-    document.getElementById("more-h").closest("section").hidden = [...moreRoot.querySelectorAll(".group")].every(g => g.hidden);
+    document.getElementById("more-h").closest("section").hidden = [...moreRoot.querySelectorAll("details.ing")].every(x => x.hidden);
   }
 
   document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => render(b.dataset.mode)));
