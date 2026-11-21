@@ -602,11 +602,13 @@ footer p + p { margin-top: .6rem; }
   // One paragraph with both sentences; the tags show which timeframes apply, each with its own status
   const fxBlock = fx => {
     const text = [fx.s.t, fx.l.t].filter(Boolean).join(" ");
-    const tags = fx.when.map(w => {
-      const o = w === "short" ? fx.s : fx.l;
-      return `<span class="fx-tag"><b>${w === "short" ? "Short term" : "Long term"}</b><i class="tag ${o.status}">${o.status === "proven" ? "Proven" : "Claimed"}</i></span>`;
-    }).join("");
-    return `<div class="fx"><div class="fx-head">${tags}</div><p>${text}</p></div>`;
+    // One label for the timeframe, one status: proven if any part is proven
+    const both = fx.when.includes("short") && fx.when.includes("long");
+    const label = both ? "Short & long term" : fx.when.includes("short") ? "Short term" : "Long term";
+    const proven = fx.when.some(w => (w === "short" ? fx.s : fx.l).status === "proven");
+    const status = proven ? "proven" : "claimed";
+    const head = fx.when.length ? `<span class="fx-tag"><b>${label}</b><i class="tag ${status}">${proven ? "Proven" : "Claimed"}</i></span>` : "";
+    return `<div class="fx"><div class="fx-head">${head}</div><p>${text}</p></div>`;
   };
 
   GROUPS.forEach(g => {
