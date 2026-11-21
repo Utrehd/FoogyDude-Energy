@@ -297,13 +297,13 @@ footer p + p { margin-top: .6rem; }
 
   <section aria-labelledby="ing-h">
     <h2 id="ing-h" class="display">Everything in it</h2>
-    <p class="hint">Green is the recommended dose, red is the max. Some only have a max, so only red shows. Tap an ingredient for details.</p>
+    <p class="hint">Green is the recommended dose, red is the max. Some only have one of the two. Tap an ingredient for details.</p>
     <div id="ingredients"></div>
   </section>
 
   <section aria-labelledby="more-h">
     <h2 id="more-h" class="display">No bar yet</h2>
-    <p class="hint">No max is set for these, so there is nothing to draw. Tap an ingredient for what’s known.</p>
+    <p class="hint">Neither a recommended dose nor a max is set for these, so there is nothing to draw. Tap an ingredient for what’s known.</p>
     <div id="ingredients-more"></div>
   </section>
 
@@ -495,16 +495,18 @@ footer p + p { margin-top: .6rem; }
   const moreRoot = document.getElementById("ingredients-more");
   const rows = [];
 
-  // Anything with a max gets a bar. Marks sit at the same spots on every bar:
-  // max (red) at 70%, and recommended dose (green) at 30% when there is one below the max.
-  // Where only the max is known, or the recommended dose is not below it, only red shows.
-  const hasBar = item => Boolean(item.max);
-  const recOf = item => { const r = REF[item.name]; return r && r.v < item.max ? r.v : null; };
+  // Anything with a recommended dose or a max gets a bar. Marks sit at the same spots on every bar:
+  // recommended dose (green) at 30%, max (red) at 70%. If only one is known, only that mark shows.
+  // A recommended dose that is not below the max is left out, so those show red only.
+  const hasBar = item => Boolean(item.max || REF[item.name]);
+  const recOf = item => { const r = REF[item.name]; return r && (!item.max || r.v < item.max) ? r.v : null; };
+  const overMax = (v, max) => Math.min(100, 70 + (v - max) / max * 30);
   const barPos = (v, rec, max) =>
-    rec == null ? (v <= max ? v / max * 70 : Math.min(100, 70 + (v - max) / max * 30))
+    rec == null ? (v <= max ? v / max * 70 : overMax(v, max))
+    : !max ? (v <= rec ? v / rec * 30 : Math.min(100, 30 + (v - rec) / rec * 35))  // green only: full bar at 3x
     : v <= rec ? v / rec * 30
     : v <= max ? 30 + (v - rec) / (max - rec) * 40
-    : Math.min(100, 70 + (v - max) / max * 30);
+    : overMax(v, max);
 
   GROUPS.forEach(g => {
     const wraps = {};
@@ -524,7 +526,7 @@ footer p + p { margin-top: .6rem; }
         <summary>
           <span class="ing-name${item.flag ? " flagged" : ""}">${item.name}</span>
           <span class="ing-amt"></span>
-          ${withBar ? `<span class="bar" aria-hidden="true"><i></i>${recOf(item) != null ? '<b class="tick rec"></b>' : ""}<b class="tick max"></b></span>` : ""}
+          ${withBar ? `<span class="bar" aria-hidden="true"><i></i>${recOf(item) != null ? '<b class="tick rec"></b>' : ""}${item.max ? '<b class="tick max"></b>' : ""}</span>` : ""}
         </summary>
         <div class="effects">
           <p class="limits${item.flag ? " flag" : ""}"><b>Reference</b><span class="ing-max"></span></p>
