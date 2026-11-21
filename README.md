@@ -2,7 +2,7 @@
 
 # Foggy Dude Energy
 
-Clears the fog. A home-mixed energy and vitamin drink, min-maxed. The page shows two versions (Everyday and Hardcore session), what goes in the bottle, and every ingredient checked against its daily max, with what it does short and long term.
+Clears the fog. A home-mixed energy and vitamin drink, min-maxed. The page shows two versions (Everyday and Hardcore), what goes in the bottle, and every ingredient checked against its daily max, with what it does short and long term.
 
 **Live page:** https://utrehd.github.io/FoogyDude-Energy/
 
