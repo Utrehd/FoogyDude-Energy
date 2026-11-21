@@ -182,6 +182,7 @@ details[open] .ing-name::after { transform: rotate(45deg); }
 .bar { grid-column: 1 / -1; position: relative; height: 3px; margin: .35rem 0 .1rem; background: var(--track); border-radius: 2px; }
 .bar.open { background: linear-gradient(to right, var(--track) 55%, transparent); }
 .bar i { display: block; height: 100%; width: 0; background: var(--pulse); border-radius: 2px; transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
+.bar.over i { background: var(--warn); }
 .bar .tick { position: absolute; top: -6px; width: 2px; height: 15px; margin-left: -1px; background: var(--ink); border-radius: 1px; transition: left .6s cubic-bezier(.2,.8,.2,1); }
 .ing-name.flagged::before { content: "! "; color: var(--warn); }
 .effects .limits { grid-column: 1 / -1; }
@@ -288,7 +289,7 @@ footer p + p { margin-top: .6rem; }
     <h2 id="bottle-h" class="display">In the bottle</h2>
     <ul class="recipe" id="recipe"></ul>
     <p class="summary" id="summary"></p>
-    <p class="howto">Drop the tablet in first and wait until it stops fizzing before you close the cap. Then add the powders and sip over one to two hours.</p>
+    <p class="howto" id="howto">Drop the tablet in first and wait until it stops fizzing before you close the cap. Then add the powders and sip over one to two hours.</p>
   </section>
 
   <section aria-labelledby="ing-h">
@@ -308,8 +309,9 @@ footer p + p { margin-top: .6rem; }
 (function () {
   // Products and how much of each goes in, per mode (1 = one full label serving)
   const MODES = {
-    everyday: { xb: 1, sp: 1/3, tet: 1, cr: 1, cost: "CHF 2.70" },
-    hardcore: { xb: 1, sp: 1,   tet: 1, cr: 1, cost: "CHF 5.30" }
+    // mt = mate tea bag, mo = one 500 ml can of Monster Energy Original (with sugar)
+    everyday: { xb: 1, sp: 1/3, tet: 1, cr: 1, mt: 1, caff: [170, 210], plus: "mate",    cost: "CHF 2.70" },
+    hardcore: { xb: 1, sp: 1,   tet: 1, cr: 1, mo: 1, caff: [310, 310], plus: "Monster", cost: "CHF 5.30" }
   };
 
   const RECIPE = [
@@ -317,8 +319,9 @@ footer p + p { margin-top: .6rem; }
     { key: "sp",  qty: m => m.sp === 1 ? "15 g" : "5 g", what: "Sponser Mental Focus", note: m => m.sp === 1 ? "3 heaped scoops" : "1 heaped scoop" },
     { key: "tet", qty: m => "1",    what: "tetesept A-Z Complex", note: "fizzy tablet" },
     { key: "cr",  qty: m => "3 g",  what: "QNT Creatine Monohydrate", note: "1 scoop" },
-    { key: "mt",  qty: m => "1",    what: "Mate tea bag", note: "brewed in the bottle" },
-    { key: "w",   qty: m => "1 L",  what: "Water", note: "" }
+    { key: "mt",  modes: ["everyday"], qty: m => "1",      what: "Mate tea bag", note: "brewed in the bottle" },
+    { key: "mo",  modes: ["hardcore"], qty: m => "500 ml", what: "Monster Energy Original", note: "the green can, with sugar" },
+    { key: "w",   qty: m => m.mo ? "500 ml" : "1 L", what: "Water", note: m => m.mo ? "tops it up to 1 L" : "" }
   ];
 
   const VIT_SHORT = "Nothing you’ll feel unless you’re low.";
@@ -330,13 +333,18 @@ footer p + p { margin-top: .6rem; }
         short: "More alert and focused within 30–60 minutes, lasting a few hours. Keep it under 200 mg at once.",
         long: "Tolerance builds with daily use. Too much or too late hurts sleep." }
     ]},
+    { title: "Sugar", items: [
+      { name: "Sugars", unit: "g", src: { mo: 55 }, max: 50,
+        short: "Quick energy that can fade again within a couple of hours.",
+        long: "Sugary drinks every day are linked to weight gain and tooth decay." }
+    ]},
     { title: "Performance", items: [
       { name: "Creatine monohydrate", unit: "g", src: { cr: 3 }, max: 3, maxText: "Matches the 3 g daily dose EFSA assessed as safe long term",
         short: "Nothing you’ll feel.",
         long: "More strength and power in short, intense efforts after about four weeks of daily use." }
     ]},
     { title: "Amino acids", items: [
-      { name: "Taurine", unit: "mg", src: { xb: 1000, sp: 470 }, max: 3000, maxLabel: "3 g observed safe level",
+      { name: "Taurine", unit: "mg", src: { xb: 1000, sp: 470, mo: 2000 }, max: 3000, maxLabel: "3 g observed safe level",
         short: "No clear effect on its own.", long: "Little evidence at this dose." },
       { name: "L-Tyrosine", unit: "mg", src: { xb: 1000 },
         short: "May help hold focus under stress or after little sleep.", long: "No clear evidence." },
@@ -344,12 +352,14 @@ footer p + p { margin-top: .6rem; }
         short: "Boosts blood flow at much higher doses (6–8 g).", long: "Little to expect at this dose." },
       { name: "Glycine", unit: "mg", src: { xb: 1000 },
         short: "No energy effect. Studied for sleep at 3 g.", long: "No clear evidence." },
-      { name: "Inositol", unit: "mg", src: { xb: 1000 },
+      { name: "Inositol", unit: "mg", src: { xb: 1000 }, more: ["mo"],
         short: "None known.", long: "Mood studies use far higher doses." },
       { name: "L-Threonine", unit: "mg", src: { xb: 500 },
         short: "None known.", long: "An essential amino acid that food already covers." },
       { name: "Acetyl-L-carnitine", unit: "mg", src: { xb: 400 }, max: 2000, maxLabel: "2 g observed safe level",
         short: "None clear.", long: "Some evidence against mental fatigue in older adults." },
+      { name: "L-Carnitine L-tartrate", unit: "mg", src: { mo: 200 }, max: 2000,
+        short: "None clear.", long: "Studied for muscle recovery at 1–2 g, well above this dose." },
       { name: "L-Theanine", unit: "mg", src: { xb: 100, sp: 100 },
         short: "Calmer focus. Takes the edge off caffeine.", long: "Little evidence." },
       { name: "Phosphatidylserine", unit: "mg", src: { sp: 200 },
@@ -371,8 +381,10 @@ footer p + p { margin-top: .6rem; }
         short: "Small studies suggest sharper attention.", long: "Little evidence." },
       { name: "Bacopa", unit: "mg", src: { xb: 150 },
         short: "Nothing noticeable.", long: "Better memory after 8–12 weeks in several trials." },
-      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50 },
+      { name: "Ginseng", unit: "mg", src: { xb: 50, sp: 50, mo: 400 },
         short: "Small, mixed effects on focus.", long: "Mixed evidence." },
+      { name: "Guarana extract", unit: "mg", src: { mo: 10 },
+        short: "Little to feel at this dose.", long: "Naturally contains caffeine, but at 10 mg of extract the amount is small." },
       { name: "Chokeberry (BrainBerry)", unit: "mg", src: { sp: 65 },
         short: "Little evidence.", long: "Antioxidant polyphenols. Small studies only." }
     ]},
@@ -391,11 +403,11 @@ footer p + p { margin-top: .6rem; }
       { name: "Vitamin D3", unit: "µg", src: { tet: 5 }, max: 100, short: VIT_SHORT, long: "Bones and immune system. Often low in winter." },
       { name: "Vitamin E", unit: "mg", src: { tet: 12, sp: 5.5 }, max: 300, short: VIT_SHORT, long: "Protects cells from oxidative damage." },
       { name: "Vitamin B1", unit: "mg", src: { tet: 1.1, xb: 2, sp: 0.3 }, short: VIT_SHORT, long: "Turns carbs into energy." },
-      { name: "Vitamin B2", unit: "mg", src: { tet: 1.4, sp: 0.4 }, short: VIT_SHORT, long: "Energy metabolism." },
-      { name: "Niacin (nicotinamide)", unit: "mg", src: { tet: 16, xb: 16, sp: 4 }, max: 900, short: "No flush with this form. " + VIT_SHORT, long: "Energy metabolism." },
-      { name: "Vitamin B6", unit: "mg", src: { tet: 1.4, xb: 3, sp: 0.4 }, max: 12, short: VIT_SHORT, long: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves." },
+      { name: "Vitamin B2", unit: "mg", src: { tet: 1.4, sp: 0.4, mo: 3.5 }, short: VIT_SHORT, long: "Energy metabolism." },
+      { name: "Niacin (nicotinamide)", unit: "mg", src: { tet: 16, xb: 16, sp: 4, mo: 42.5 }, max: 900, short: "No flush with this form. " + VIT_SHORT, long: "Energy metabolism." },
+      { name: "Vitamin B6", unit: "mg", src: { tet: 1.4, xb: 3, sp: 0.4, mo: 4 }, max: 12, short: VIT_SHORT, long: "Nerves and protein metabolism. Above 12 mg a day for long periods it can damage nerves." },
       { name: "Folic acid", unit: "µg", src: { tet: 200, xb: 200, sp: 45 }, max: 1000, short: VIT_SHORT, long: "Making new blood cells." },
-      { name: "Vitamin B12", unit: "µg", src: { tet: 2.5, xb: 5, sp: 0.6 }, short: VIT_SHORT, long: "Blood and nerves. The body absorbs only a small share of high doses." },
+      { name: "Vitamin B12", unit: "µg", src: { tet: 2.5, xb: 5, sp: 0.6, mo: 12.5 }, short: VIT_SHORT, long: "Blood and nerves. The body absorbs only a small share of high doses." },
       { name: "Biotin", unit: "µg", src: { tet: 50, sp: 12 }, short: VIT_SHORT, long: "Energy metabolism, skin and hair if you’re low." },
       { name: "Pantothenic acid", unit: "mg", src: { tet: 6, sp: 1.5 }, short: VIT_SHORT, long: "Energy metabolism and mental performance." }
     ]},
@@ -454,7 +466,9 @@ footer p + p { margin-top: .6rem; }
     "Acetyl-L-carnitine": "Safe up to 2 g",
     "Choline": "US max 3.5 g",
     "Astaxanthin": "EU max 8 mg",
-    "Magnesium": "Max 250 mg from supplements"
+    "Magnesium": "Max 250 mg from supplements",
+    "Sugars": "WHO advice: under 50 g of free sugars a day",
+    "L-Carnitine L-tartrate": "Safe up to 2 g of L-carnitine"
   };
 
   const fmtNum = v => {
@@ -489,7 +503,7 @@ footer p + p { margin-top: .6rem; }
           <p><b>Long term</b>${item.long}</p>
         </div>`;
       wrap.appendChild(d);
-      rows.push({ item, amt: d.querySelector(".ing-amt"), bar: d.querySelector(".bar i"), tick: d.querySelector(".tick"), max: d.querySelector(".ing-max") });
+      rows.push({ item, d, name: d.querySelector(".ing-name"), limits: d.querySelector(".limits"), amt: d.querySelector(".ing-amt"), barEl: d.querySelector(".bar"), bar: d.querySelector(".bar i"), tick: d.querySelector(".tick"), max: d.querySelector(".ing-max") });
     });
     ingRoot.appendChild(wrap);
   });
@@ -499,22 +513,39 @@ footer p + p { margin-top: .6rem; }
     document.body.dataset.mode = modeKey;
     document.querySelectorAll(".mode").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.mode === modeKey)));
 
-    document.getElementById("recipe").innerHTML = RECIPE.map(r => {
+    document.getElementById("recipe").innerHTML = RECIPE.filter(r => !r.modes || r.modes.includes(modeKey)).map(r => {
       const note = typeof r.note === "function" ? r.note(m) : r.note;
       return `<li><span class="qty">${r.qty(m)}</span><span class="what">${r.what}${note ? ` <span>${note}</span>` : ""}</span></li>`;
     }).join("");
 
+    const [cLo, cHi] = m.caff;
+    const caffText = cLo === cHi ? `${cLo} mg` : `${cLo}–${cHi} mg`;
     document.getElementById("summary").innerHTML =
-      `<b>170–210 mg</b> caffeine, about <b>${m.cost}</b> a bottle plus the mate, and one bottle a day at most.`;
+      `<b>${caffText}</b> caffeine, about <b>${m.cost}</b> a bottle plus the ${m.plus}, and one bottle a day at most.`;
+    document.getElementById("howto").textContent = modeKey === "hardcore"
+      ? "Drop the tablet in the water first and wait until it stops fizzing. Stir in the powders, then pour the Monster in last and slowly, since it foams. Close the cap, don’t shake, and sip over one to two hours."
+      : "Drop the tablet in first and wait until it stops fizzing before you close the cap. Then add the powders and sip over one to two hours.";
 
-    rows.forEach(({ item, amt, bar, tick, max }) => {
+    rows.forEach(({ item, d, name, limits, amt, barEl, bar, tick, max }) => {
       const ref = REF[item.name];
-      const v = item.caffeine ? 210 : total(item, m);
-      amt.textContent = item.caffeine ? "170–210 mg" : (item.approx ? "~" : "") + fmt(v, item.unit);
+      const v = item.caffeine ? cHi : total(item, m);
+      d.hidden = v === 0;   // ingredients that only come from the other version's products
+      if (d.hidden) return;
+      const plus = item.more && item.more.some(k => m[k]);
+      amt.textContent = item.caffeine ? caffText : (item.approx ? "~" : "") + fmt(v, item.unit) + (plus ? "+" : "");
+
+      let warn = null;
+      if (item.max && v > item.max) warn = "Over the max in this version";
+      else if (item.caffeine && cLo > 200) warn = "Above the 200 mg single-dose limit, so sip it slowly";
+      name.classList.toggle("flagged", Boolean(item.flag || warn));
+      limits.classList.toggle("flag", Boolean(item.flag || warn));
+      if (barEl) barEl.classList.toggle("over", Boolean(warn));
 
       const parts = [];
+      if (warn) parts.push(warn);
       if (ref) parts.push(ref.note || (ref.type === "studied" ? "Studies use " : "Daily need ") + fmt(ref.v, item.unit));
       parts.push(item.max ? (MAXTXT[item.name] || "Max " + fmt(item.max, item.unit)) : (item.flag || "No EU max set"));
+      if (plus) parts.push("Plus an amount the Monster label doesn’t state");
       max.textContent = parts.join(". ");
 
       if (!bar) return;
@@ -526,6 +557,7 @@ footer p + p { margin-top: .6rem; }
         tick.hidden = pos > 100;
       }
     });
+    document.querySelectorAll(".group").forEach(g => { g.hidden = [...g.querySelectorAll("details.ing")].every(x => x.hidden); });
   }
 
   document.querySelectorAll(".mode").forEach(b => b.addEventListener("click", () => render(b.dataset.mode)));

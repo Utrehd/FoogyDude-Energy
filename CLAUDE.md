@@ -55,7 +55,7 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 
 ## How the data works (all in the `<script>` of `index.html`)
 
-- `MODES`: how much of each product goes in. Everyday: XBEAM 1 scoop, Sponser ⅓ serving (5 g), tetesept 1 tablet, creatine 3 g. Hardcore: same but Sponser full (15 g). Caffeine is the same in both (170–210 mg) because XBEAM is capped at 1 scoop a day.
+- `MODES`: how much of each product goes in. Everyday: XBEAM 1 scoop, Sponser ⅓ serving (5 g), tetesept 1 tablet, creatine 3 g. Hardcore: same but Sponser full (15 g), and the mate tea bag is swapped for one 500 ml can of Monster Energy Original (the sugared green one, `mo`), with the water cut to 500 ml so the bottle stays 1 L. Caffeine is per mode in `caff`: Everyday 170–210 mg (XBEAM 150 + mate 20–60), Hardcore 310 mg (XBEAM 150 + Monster 160). Rows whose total is 0 in a mode (e.g. sugar in Everyday) are hidden, and a row that goes over its max, or caffeine above 200 mg at once, gets the "!" marker, an orange bar and a warning line in its dropdown.
 - `RECIPE`: the "In the bottle" list.
 - `GROUPS`: every ingredient with `src` = amount per full serving of each product (`xb` XBEAM, `sp` Sponser, `tet` tetesept, `cr` creatine), optional `max`, `flag`, and short/long-term effect text.
 - `REF`: daily need (EU NRV) or studied dose per ingredient, drawn as the tick.
@@ -63,6 +63,7 @@ Samuel has a design style called "Pulse" in one of his GitHub repos. The chat co
 
 ## Sources behind the numbers
 
+- **Monster Energy Original (500 ml, with sugar):** per 100 ml: 11 g sugars (55 g a can), 201 kJ, 0.19 g salt, caffeine 32 mg (160 mg a can), taurine 0.4% (2 g), panax ginseng root extract 0.08% (400 mg), L-carnitine L-tartrate 0.04% (200 mg), guarana seed extract 0.002% (10 mg). B vitamins per 100 ml: niacin 8.5 mg, B6 0.8 mg, B2 0.7 mg, B12 2.5 µg. The label also lists inositol, D-glucuronolactone, maltodextrin, sucralose, salt, preservatives and colour with no amounts, so only inositol shows as "1 g+". Read from the Open Food Facts German entry (barcode 5060335635228, incomplete) and the UK label text (barcode 5060896623122); the vitamin amounts come from the UK label and a German retailer listing, not a Swiss can. Check them against a Swiss can if exact numbers matter.
 - **Product labels:** GymBeam XBEAM Energy Powder (9 g scoop, 150 mg caffeine), Sponser Mental Focus (15 g daily ration, art. 45003), tetesept A-Z Complex effervescent, Swiss version (tetesept.ch), QNT Metapure Creatine Monohydrate (3 g serving). Mate tea bag estimated at 20–60 mg caffeine.
 - **Daily max:** EFSA "Overview on Tolerable Upper Intake Levels" (version 11, Aug 2025). Examples: B6 12 mg, folic acid 1000 µg (supplements), magnesium 250 mg (supplements), vitamin A 3000 µg (retinol only), zinc 25 mg, selenium 255 µg; iron 40 mg and manganese 8 mg are EFSA "safe levels".
 - **Other limits:** caffeine 400 mg/day and 200 mg at once (EFSA). Creatine 3 g/day (EFSA-assessed). Observed safe levels: taurine 3 g, L-carnitine 2 g (Shao & Hathcock). Citrulline no-effect level 24 g. Astaxanthin 8 mg (EU novel food max). Choline 3.5 g (US UL).
