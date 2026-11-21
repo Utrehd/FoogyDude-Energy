@@ -90,7 +90,7 @@ Numbers added this way (`REF` for green, `max` + `MAXTXT` for red; each referenc
 |---|---|---|---|
 | L-Tyrosine | none | 3.6 g | Health Canada Workout Supplements monograph (its single L-Tyrosine monograph also allows 10–20 g for occasional use, and the two disagree) |
 | Glycine | none | 1.8 g | Health Canada Workout Supplements monograph |
-| Inositol | none | 650 mg | Health Canada multivitamin monograph (complementary ingredient cap). Trials saw side effects only at 12 g, so this cap is conservative, and both versions show it as over the max |
+| Inositol | none | 12 g | Set to the 12 g dose from the Carlomagno & Unfer trial, the highest dose tested, where mild GI side effects appeared. Health Canada caps it at 650 mg a day in multivitamins, which is not used here |
 | L-Threonine | about 1.05 g | none | WHO/FAO 15 mg per kg a day at an assumed 70 kg. Health Canada caps free threonine at 301 mg, which is below the dietary need, so it is not used as the red mark and only appears in the text |
 | L-Theanine | 200 mg | none | Health Canada 200–250 mg a day |
 | Phosphatidylserine | none (same as max) | 300 mg | Health Canada, soy PS recommended maximum daily intake |
