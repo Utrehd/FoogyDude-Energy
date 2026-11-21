@@ -33,8 +33,8 @@ The repo is public and Pages deploys from `main` / root. Samuel asked for a publ
 
 - `.scene` is a fixed layer behind `main`: sky gradient with a backlight, three fog layers (`.f1`–`.f3`), and the Foggy Dude (`foggy-dude.webp`, 811×1100 with transparency) between the far and near fog.
 - Fog tiles are inline SVG `feTurbulence` data URIs (1200×700, `stitchTiles`), so there are no image files to load.
-- The script at the bottom drifts the fog sideways, moves layers at different speeds on scroll (`data-depth`), nudges them with the pointer, and sets `--clear` (0 to 1 over the first screen) so the fog thins as you scroll. Hardcore mode drifts the fog faster.
-- `prefers-reduced-motion` stops the drift and parallax; the fog still thins on scroll.
+- The scene is fixed and does not move or change with scroll: the figure and the fog stay put while the content scrolls over them. There is no scroll or pointer JavaScript. The fog drifts with a CSS `drift` animation on each layer (`--t` per layer, one 1200 px tile per loop). Hardcore sets `--speed: 2.4` on `body`, which makes the drift 2.4x faster.
+- `prefers-reduced-motion` stops the drift.
 - `foggy-dude.webp` comes from a photo of Samuel: cut out with rembg (`u2net_human_seg`), then darkened to a navy silhouette with a faint trace of the photo, a cool backlight rim, film grain, faint scratches, and the legs fading into fog. The original photo is not in the repo.
 
 ## Task 2 (optional, ask first): restyle with his "Pulse" style
